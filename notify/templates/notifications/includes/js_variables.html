@@ -1,0 +1,28 @@
+<script type="text/javascript">
+    // Ajax-Notification related callback urls.
+    var updateNotificationUrl = "{{ update_notification }}";
+    var markNotificationUrl = "{{ mark_notification }}";
+    var markAllNotificationUrl = "{{ mark_all_notification }}";
+    var deleteNotificationUrl = "{{ delete_notification }}";
+
+    // Jquery class selectors.
+    var nfListClassSelector = "{{ nf_list_class_selector }}";
+    var nfClassSelector = "{{ nf_class_selector }}";
+    var nfBoxListClassSelector = "{{ nf_box_list_class_selector }}";
+    var nfBoxClassSelector = "{{ nf_box_class_selector }}";
+
+    var markNotificationSelector = "{{ nf_mark_selector }}";
+    var markAllNotificationSelector = "{{ nf_mark_all_selector }}";
+    var deleteNotificationSelector = "{{ nf_delete_selector }}";
+
+    var readNotificationClass = "{{ nf_read_class }}";
+    var unreadNotificationClass = "{{ nf_unread_class }}";
+
+    var notificationUpdateTimeInterval = "{{ nf_update_time_interval }}";
+
+    //functions to handle ajax success.
+    {% include "notifications/includes/update_success.js" %}
+    {% include "notifications/includes/mark_success.js" %}
+    {% include "notifications/includes/mark_all_success.js" %}
+    {% include "notifications/includes/delete_success.js" %}
+</script>

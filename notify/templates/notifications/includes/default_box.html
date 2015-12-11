@@ -1,0 +1,16 @@
+<li data-nf-id="{{ notification_id }}" id="nf-{{ notification_id }}"
+    class="notification-box list-group-item {{ read|yesno:'read,unread' }}">
+    <a href="{{ actor_url }}">{{ actor }}</a> {{ verb }}
+    {% if target %}
+        on <a href="{{ target_url }}">{{ target }}</a>
+    {% endif %}
+    <span class="timesince">{{ created|timesince }}</span>
+    <button data-id="{{ notification_id }}" class="mark-notification"
+            data-mark-action="{{ read|yesno:'unread,read' }}">
+        Mark as {{ read|yesno:'unread,read' }}
+    </button>
+
+    <button class="delete-notification" data-id="{{ notification_id }}">
+        X
+    </button>
+</li>

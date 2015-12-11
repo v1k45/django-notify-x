@@ -1,0 +1,22 @@
+{% extends "notifications/base.html" %}
+{% load notification_tags %}
+{% block title %}Notifications{% endblock %}
+{% block content %}
+    <ul class="list-group">
+        {% for notification in notifications %}
+            <li class="list-group-item">
+            <a href="{% firstof notification.actor.get_absolute_url notification.actor_url %}">
+                {% firstof notification.actor notification.actor_text %}</a>
+             {{ notification.verb }}. <i>{{ notification.created|timesince }} ago</i>
+            </li>
+        {% endfor %}
+    </ul>
+    <hr>
+    <button class="mark-all-notifications" data-mark-action="read">Mark all as read</button>
+    <button class="mark-all-notifications" data-mark-action="unread">Mark all as unread</button>
+    <ul class="notifications list-group">
+    {% if notifications %}
+    {% render_notifications using  notifications %}
+    {% endif %}
+    </ul>
+{% endblock %}

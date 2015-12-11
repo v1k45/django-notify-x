@@ -1,0 +1,16 @@
+<li data-nf-id="{{ notification.id }}" id="nf-{{ notification.id }}" class="notification list-group-item {{ notification.read|yesno:'read,unread' }}">
+    <a href="{{ notification.actor_url }}">{{ notification.actor }}</a> {{ notification.verb }}
+    {% if notification.target %}
+        on <a href="{{ notification.target_url }}">{{ notification.target }}</a>
+    {% endif %}
+    <span class="timesince">{{ notification.created|timesince }} ago</span>
+    <strong>{{ notification.read|yesno }}</strong>
+    <button data-id="{{ notification.id }}" class="mark-notification"
+            data-mark-action="{{ notification.read|yesno:'unread,read' }}">
+        Mark as {{ notification.read|yesno:'unread,read' }}
+    </button>
+
+    <button class="delete-notification" data-id="{{ notification.id }}">
+        X
+    </button>
+</li>

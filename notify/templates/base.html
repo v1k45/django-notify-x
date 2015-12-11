@@ -1,0 +1,133 @@
+{% load staticfiles %}
+{% load notification_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.5/yeti/bootstrap.min.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+      <!-- HTML5 shim and Respond.js for IE8 support of HTML5
+         elements and media queries -->
+      <!-- WARNING: Respond.js doesn't work if you view the
+         page via file:// -->
+
+      <!--[if lt IE 9]>
+      <script src = "//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src = "//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+      <![endif]-->
+
+    <!-- inclusion of extra head tags. -->
+    {% block extrahead %}
+        {% include_notify_js_variables %}
+    {% endblock %}
+    <!-- end -->
+</head>
+<body>
+
+<!-- navbar -->
+<nav class="navbar navbar-inverse navbar-static-top">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">MYSite</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+
+                <li><a href="#">menu</a></li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">Dropdown <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">Separated link</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">One more separated link</a></li>
+                    </ul>
+                </li>
+
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#">Link</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false"><i class="glyphicon glyphicon-globe"></i></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <div class="notificationPanel"
+                                 style="position:relative; width: 100%; overflow: hidden;  min-width: 300px;">
+                                <div class="notificationContent" style="overflow-y: scroll; height: 100%;">
+                                    <ul class="notification-box-list" style="margin:0; padding:0;list-style-type: none;">
+                                        {% render_notifications using user.notifications.active for box %}
+                                        <li style="background-color: #ddd; padding: 5px; text-align: center;">
+                                            <a href="#" style="color: black;">All Notifications</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- end navbar -->
+
+<!-- alerts -->
+<div id="messages">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                <a class="close" data-dismiss="alert">x</a>
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>
+<!-- end alerts -->
+
+<!-- body container -->
+<div class="container">
+    {% block content %}
+    {% endblock %}
+</div>
+<!-- end body container -->
+
+<!-- footer -->
+<footer id="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <p>Page © - 2015 <strong>MySite</strong></p>
+            </div>
+        </div>
+    </div>
+</footer>
+<!-- end footer -->
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src ="{% static 'notify/notifyX.js' %}"></script>
+
+<!-- script inclusions -->
+{% block extrascripts %}
+{% endblock %}
+<!-- end script inclusions -->
+</body>
+</html>
