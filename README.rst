@@ -2,6 +2,17 @@
 django-notify-x: quick guide
 ============================
 
+.. image:: https://readthedocs.org/projects/django-notify-x/badge/?version=latest
+   :target: http://django-notify-x.readthedocs.org/en/latest/?badge=latest
+   :alt: Documentation Status
+
+.. image:: https://badge.fury.io/py/django-notify-x.svg
+   :target: https://badge.fury.io/py/django-notify-x
+
+.. image:: https://travis-ci.org/v1k45/django-notify-x.svg
+   :target: https://travis-ci.org/v1k45/django-notify-x
+
+
 Django NotifyX is a reusable app which adds notification system features to your Django app.
 
 It was inspired from `django-notifications`_ , major differences include:
@@ -161,4 +172,4 @@ It will be best to `Read the Docs`_ instead of expecting every thing from a quic
 
 
 .. _django-notifications: https://www.github.com/django-notifications/django-notifications/
-.. _Read the docs: new-url-here
+.. _Read the docs: http://django-notify-x.readthedocs.org/en/latest/index.html
