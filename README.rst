@@ -170,13 +170,13 @@ And other things...
 
 It will be best to `Read the Docs`_ instead of expecting every thing from a quick guide :)
 
-TODO
-====
+TODO List
+=========
 
 - Add notification concatenation support.
     - Notification concatenation is what facebook does when you read a notification like *Bob and 18 others commented on your blogpost*.
     - This will require non-anonymous activity stream field.
-    - I've to either remove the anonymous notificatio support or find another way to impement this feature.
+    - I've to either remove the anonymous notification support or find another way to implement this feature.
 - Convert *Function based views* to *Class Based views*.
 
 .. _django-notifications: https://www.github.com/django-notifications/django-notifications/
