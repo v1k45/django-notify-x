@@ -36,7 +36,6 @@ class RenderNotificationsNode(template.Node):
         self.obj = obj
         self.target = target
 
-    # @staticmethod
     def generate_html(self, notifications):
         """
         Generates rendered HTML content using supplied notifications.
@@ -83,7 +82,9 @@ class RenderNotificationsNode(template.Node):
 def render_notifications(parser, token):
     """
     Example::
-        {% render_notifications for NOTIFICATION_QUERYSET_OBJECT %}
+        {% render_notifications using NOTIFICATION_QUERYSET_OBJECT %}
+        {% render_notifications using NOTIFICATION_QUERYSET_OBJECT for \
+        NOTIFICATION_RENDERING_TARGET %}
 
     :param parser: default arg
     :param token: default arg
@@ -92,8 +93,11 @@ def render_notifications(parser, token):
     return RenderNotificationsNode.handle_token(parser, token)
 
 
-@register.inclusion_tag('notifications/includes/js_variables.html')
-def include_notify_js_variables():
+JS_INCLUSION_TEMPATE = 'notifications/includes/js_variables.html'
+
+
+@register.inclusion_tag(JS_INCLUSION_TEMPATE, takes_context=True)
+def include_notify_js_variables(context):
     """
     Inclusion template tag to include all JS variables required by the
     notify.js file on the HTML page around <script> tags.
@@ -104,6 +108,7 @@ def include_notify_js_variables():
     :return: Prepares context for rendering in the inclusion file.
     """
     ctx = {
+        'user': context['request'].user,
         'update_notification': reverse('notifications:update'),
         'mark_notification': reverse('notifications:mark'),
         'mark_all_notification': reverse('notifications:mark_all'),
@@ -124,3 +129,49 @@ def include_notify_js_variables():
         'nf_update_time_interval': notify_settings.UPDATE_TIME_INTERVAL,
     }
     return ctx
+
+
+class UserNotification(RenderNotificationsNode):
+
+    """
+    Returns notifications for a supplied user, can be used as shortcut
+    for render_notifications
+    """
+    @classmethod
+    def handle_token(cls, parser, token):
+        tokens = token.split_contents()
+        if len(tokens) == 1:
+            # Uses the object parameter as flag
+            return cls(obj='user-notification', target='page')
+
+        if len(tokens) > 3:
+            raise template.TemplateSyntaxError("Max arguments are two")
+        elif tokens[1] != 'for':
+            raise template.TemplateSyntaxError("First argument must be 'for'")
+        elif not tokens[2]:
+            raise template.TemplateSyntaxError(
+                "Second argument must either 'box' or 'page'")
+        else:
+            return cls(obj='user-notification', target=tokens[2])
+
+    def render(self, context):
+        if self.obj == 'user-notification':
+            request = context['request']
+            user = request.user
+            if user.is_authenticated():
+                notifications = user.notifications.active()
+                return self.generate_html(notifications)
+        return ''
+
+
+@register.tag
+def user_notifications(parser, token):
+    """
+    Example::
+        {% user_notifications for NOTIFICATION_RENDERING_TARGET %}
+
+    :param parser: default arg
+    :param token: default arg
+    :return: Rendered HTML content for supplied notification QuerySet.
+    """
+    return UserNotification.handle_token(parser, token)
