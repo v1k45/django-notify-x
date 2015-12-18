@@ -158,9 +158,7 @@ include_notify_js_variables
     To include JS variables for AJAX notification support, do this::
 
         {% load notification_tags %}
-        {% if user.is_authenticated %}
-            {% include_notify_js_variables %}
-        {% endif %}
+        {% include_notify_js_variables %}
 
     This template inclusion includes three javascript files from the template includes directory, they are::
 
@@ -171,5 +169,25 @@ include_notify_js_variables
 
     All of them are nothing but javascript function declarations which are supposed to run when a JQuery AJAX request is successfully completed.
 
-    .. warning::
-        Make sure you include the js variables and the static file only when the user is authenticated. Inserting the scripts without authentication will send notification update request on the server. The notifications update view will redirect the request to login page when the request is un authenticated, so countless requests will be sent for nothing. 
+    .. versionchanged:: 0.1.1
+        In the previous versions, it was necessarty to add notification check before including the JS variables using the ``include_notify_js_variables`` template tag. It is no more required. The new update checks for authenticated users and then renders the tempalte if required.
+
+user_notifications
+------------------
+
+    .. versionadded:: 0.1.1
+        The ``user_notifications`` tag is a shortcut to the ``render_notifications`` tag. It directly renders the notifications of the logged-in user on the specified target.
+
+    You can use this tag like this::
+
+        {% load notification_tags %}
+        {% user_notifications %}
+
+    This tag renders active notifications of the user by using something like ``request.user.notifications.active()``.
+
+    Just like ``render_notifications`` it also takes rendering target as an optional argument. You can specify rendering target like this::
+
+        {% load notification_tags %}
+        {% user_notifications for box %}
+
+    By default, it'll use 'page' as the rendering target and use full page notification rending template corresponding to the ``nf_type`` of the template.

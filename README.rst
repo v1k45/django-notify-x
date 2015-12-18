@@ -49,13 +49,15 @@ After the you've installed ``django-notify-x`` in your python enviroment. You ha
         ...
         'your.other.apps',
         ...
-        'notify'.
+        'notify',
     )
 
 Then an entry on the ``urls.py`` file::
 
+    import notify
+
     urlpatterns = (
-        url(r'^notifications/', include('notify.urls', 'notifications')),
+        url(r'^notifications/', include(notify.urls, 'notifications')),
     )
 
 Then run migrations::
@@ -152,9 +154,7 @@ include_notify_js_variables
     To include JS variables for AJAX notification support, do this::
 
         {% load notification_tags %}
-        {% if user.is_authenticated %}
-            {% include_notify_js_variables %}
-        {% endif %}
+        {% include_notify_js_variables %}
 
     This template inclusion includes three javascript files from the template includes directory, they are::
 
@@ -164,6 +164,25 @@ include_notify_js_variables
         update_success.js
 
     All of them are nothing but javascript function declarations which are supposed to run when a JQuery AJAX request is successfully completed.
+
+user_notifications
+------------------
+
+    The ``user_notifications`` tag is a shortcut to the ``render_notifications`` tag. It directly renders the notifications of the logged-in user on the specified target.
+
+    You can use this tag like this::
+
+        {% load notification_tags %}
+        {% user_notifications %}
+
+    This tag renders active notifications of the user by using something like ``request.user.notifications.active()``.
+
+    Just like ``render_notifications`` it also takes rendering target as an optional argument. You can specify rendering target like this::
+
+        {% load notification_tags %}
+        {% user_notifications for box %}
+
+    By default, it'll use 'page' as the rendering target and use full page notification rending template corresponding to the ``nf_type`` of the template.
 
 And other things...
 ===================
