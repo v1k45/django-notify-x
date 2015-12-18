@@ -5,7 +5,9 @@ from notify.signals import notify
 from django.utils import timezone
 from django.core.urlresolvers import reverse
 import json
-from django.template import Template, Context
+from django.template import Template, Context, RequestContext
+from django.test.client import RequestFactory
+from django.contrib.auth.models import AnonymousUser
 
 User = get_user_model()
 
@@ -511,12 +513,27 @@ class NotificationTemplateTagTest(TestCase):
     {% include_notify_js_variables %}
     """)
 
+    USER_NOTIFICATIONS = Template("""
+    {% load notification_tags %}
+    {% user_notifications %}
+    """)
+
     def setUp(self):
         user = User(username='user', email='user@test.com')
         user.set_password('pwd@user')
         user.save()
 
         self.user = User.objects.get(username='user')
+
+        actor = User.objects.create_user('actor', 'actor@test.com',
+                                         'pwd@actor')
+
+        for x in range(10):
+            notify.send(User, recipient=self.user, actor=actor,
+                        verb='followed you', nf_type='followed_you')
+
+        factory = RequestFactory()
+        self.request = factory.get('/foobar/')
 
     def test_render_template_tag(self):
         notify.send(User, recipient=self.user,
@@ -537,7 +554,23 @@ class NotificationTemplateTagTest(TestCase):
         self.assertIn('No notifications yet', rendered)
 
     def test_js_inclusion_tag(self):
-        rendered = self.JS_INCLUSION.render(Context())
+        self.request.user = self.user
+        rendered = self.JS_INCLUSION.render(RequestContext(self.request))
         self.assertIn('<script type="text/javascript">', rendered)
+
+    def test_js_inclusion_tag_anonymous_user(self):
+        self.request.user = AnonymousUser()
+        rendered = self.JS_INCLUSION.render(RequestContext(self.request))
+        self.assertNotIn('<script type="text/javascript">', rendered)
+
+    def test_user_notifications(self):
+        self.request.user = self.user
+        rendered = self.USER_NOTIFICATIONS.render(RequestContext(self.request))
+        self.assertIn('followed you', rendered)
+
+    def test_user_notifications_for_anonymous_user(self):
+        self.request.user = AnonymousUser()
+        rendered = self.USER_NOTIFICATIONS.render(RequestContext(self.request))
+        self.assertNotIn('followed you', rendered)
 
 # TODO: Write test for test-worthy methods.
