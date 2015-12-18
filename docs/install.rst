@@ -23,9 +23,14 @@ Add ``notify`` in ``INSTALLED_APPS`` of your project settings::
 
 Include ``notify.urls`` in your ``urls.py`` with ``notifications`` as namespace::
 
+    import notify
+
     urlpatterns = [
-        url(r'^notifications/', include('notify.urls', 'notifications')),
+        ...
+        url(r'^notifications/', include(notify.urls, 'notifications')),
+        ...
     ]
+
 
 Finally, run migrations::
 
@@ -37,3 +42,5 @@ Dependencies
 
 ``django-notify-x`` currently supports Django 1.8 and above. There is no support for previous versions.
 Both, Python 2.7 as well as Python 3.4 are supported.
+
+It uses ``django-jsonfield`` package to add support to attach JSON data to notifications using the ``extra`` field.
