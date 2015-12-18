@@ -160,7 +160,7 @@ include_notify_js_variables
         {% load notification_tags %}
         {% include_notify_js_variables %}
 
-    This template inclusion includes three javascript files from the template includes directory, they are::
+    This template inclusion includes four javascript files from the template includes directory, they are::
 
         mark_success.js
         mark_all_success.js
@@ -169,13 +169,17 @@ include_notify_js_variables
 
     All of them are nothing but javascript function declarations which are supposed to run when a JQuery AJAX request is successfully completed.
 
-    .. versionchanged:: 0.1.1
+    .. note::
+        **Changed in version 0.1.1**
+        
         In the previous versions, it was necessarty to add notification check before including the JS variables using the ``include_notify_js_variables`` template tag. It is no more required. The new update checks for authenticated users and then renders the tempalte if required.
 
 user_notifications
 ------------------
 
-    .. versionadded:: 0.1.1
+    .. note::
+        **Added in version 0.1.1**
+
         The ``user_notifications`` tag is a shortcut to the ``render_notifications`` tag. It directly renders the notifications of the logged-in user on the specified target.
 
     You can use this tag like this::
