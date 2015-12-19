@@ -17,8 +17,8 @@ Django NotifyX is a reusable app which adds notification system features to your
 
 It was inspired from `django-notifications`_ , major differences include:
     - Multipe user notification at once.
-    - A different approch for notification updates.
-    - Less hassles when trying to format notifications differently accoring to their types.
+    - A different approach for notification updates.
+    - Less hassles when trying to format notifications differently according to their types.
     - AJAX support for everything.
     - And many more.
 
