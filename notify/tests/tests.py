@@ -476,7 +476,7 @@ class NotificationViewTest(TestCase):
                          notifications.count())
 
         for json_nf in resp['notifications']:
-            self.assertIn(json_nf['notification_id'],
+            self.assertIn(json_nf['id'],
                           [nf.id for nf in notifications])
 
     def test_update_view_with_wrong_flag_value(self):
