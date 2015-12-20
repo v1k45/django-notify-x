@@ -1,7 +1,7 @@
 from django import template
 from django.core.urlresolvers import reverse
-from django.template.loader import render_to_string
-from notify import notify_settings
+from .. import notify_settings
+from ..utils import render_notification
 
 register = template.Library()
 
@@ -43,24 +43,9 @@ class RenderNotificationsNode(template.Node):
         :return: Rendered HTML.
         """
         html_chunks = []
-        template_dir = 'notifications/includes/'
-        for notification in notifications:
-
-            template_name = notification.nf_type
-
-            if self.target == 'box':
-                suffix = '_box.html'
-                nf_ctx = notification.as_json()
-            else:
-                suffix = '.html'
-                nf_ctx = {'notification': notification}
-
-            templates = [
-                "{0}{1}{2}".format(template_dir, template_name, suffix),
-                "{0}default{1}".format(template_dir, suffix)]
-
-            html = render_to_string(templates, nf_ctx)
-
+        for nf in notifications:
+            extra = nf.as_json() if self.target == 'box' else {}
+            html = render_notification(nf, render_target=self.target, **extra)
             html_chunks.append(html)
         else:
             html_chunks.append("<b>No notifications yet.</b>")

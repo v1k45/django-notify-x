@@ -8,4 +8,5 @@ Contributors
 
 *In alphabetical order*
 
+- Fernando Macedo
 - Your name here :)
