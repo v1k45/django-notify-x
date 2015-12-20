@@ -8,5 +8,5 @@ Contributors
 
 *In alphabetical order*
 
-- Fernando Macedo
+- `Fernando Macedo <http://github.com/fgmacedo/>`__
 - Your name here :)

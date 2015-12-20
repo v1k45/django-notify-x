@@ -1,6 +1,8 @@
 from django import dispatch
 from django.dispatch import receiver
 from notify.models import Notification
+from django.utils.translation import ugettext as _
+
 
 notify = dispatch.Signal(providing_args=[
     'recipient', 'recipient_list',
@@ -37,19 +39,19 @@ def notifier(sender, **kwargs):
     extra = kwargs.pop('extra', None)
 
     if recipient and recipient_list:
-        raise TypeError("You must specify either a single recipient or a list"
-                        " of recipients, not both.")
+        raise TypeError(_("You must specify either a single recipient or a list"
+                        " of recipients, not both."))
     elif not recipient and not recipient_list:
-        raise TypeError("You must specify the recipient of the notification.")
+        raise TypeError(_("You must specify the recipient of the notification."))
 
     if not actor and not actor_text:
-        raise TypeError("Actor not specified.")
+        raise TypeError(_("Actor not specified."))
 
     if not verb:
-        raise TypeError("Verb not specified.")
+        raise TypeError(_("Verb not specified."))
 
     if recipient_list and not isinstance(recipient_list, list):
-        raise TypeError("Supplied recipient is not an instance of list.")
+        raise TypeError(_("Supplied recipient is not an instance of list."))
 
     if recipient:
         notification = Notification(

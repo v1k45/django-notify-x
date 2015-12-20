@@ -1,5 +1,6 @@
 from django import template
 from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext as _
 from .. import notify_settings
 from ..utils import render_notification
 
@@ -19,18 +20,19 @@ class RenderNotificationsNode(template.Node):
 
         if tokens[1] != 'using':
             raise template.TemplateSyntaxError(
-                "The second argument in %r must be 'for'" % (tokens[0]))
+                _("The second argument in %r must be 'for'") % (tokens[0]))
 
         if len(tokens) == 3:
             return cls(parser.compile_filter(tokens[2]))
         elif len(tokens) == 5:
             if tokens[3] != 'for':
                 raise template.TemplateSyntaxError(
-                    "The second argument in %r must be 'for'" % (tokens[0]))
+                    _("The second argument in %r must be 'for'") % (tokens[0]))
             return cls(obj=parser.compile_filter(tokens[2]), target=tokens[4])
         else:
             raise template.TemplateSyntaxError(
-                "%r takes 2 or 3 arguments, %r given." % len(tokens))
+                _("{tag} takes 2 or 3 arguments, {len} given.").format(
+                    tag=tokens[0], len=len(tokens)))
 
     def __init__(self, obj, target='page'):
         self.obj = obj
@@ -48,7 +50,7 @@ class RenderNotificationsNode(template.Node):
             html = render_notification(nf, render_target=self.target, **extra)
             html_chunks.append(html)
         else:
-            html_chunks.append("<b>No notifications yet.</b>")
+            html_chunks.append(_("<b>No notifications yet.</b>"))
         html_string = '\n'.join(html_chunks)
         return html_string
 
@@ -130,12 +132,12 @@ class UserNotification(RenderNotificationsNode):
             return cls(obj='user-notification', target='page')
 
         if len(tokens) > 3:
-            raise template.TemplateSyntaxError("Max arguments are two")
+            raise template.TemplateSyntaxError(_("Max arguments are two"))
         elif tokens[1] != 'for':
-            raise template.TemplateSyntaxError("First argument must be 'for'")
+            raise template.TemplateSyntaxError(_("First argument must be 'for'"))
         elif not tokens[2]:
             raise template.TemplateSyntaxError(
-                "Second argument must either 'box' or 'page'")
+                _("Second argument must either 'box' or 'page'"))
         else:
             return cls(obj='user-notification', target=tokens[2])
 

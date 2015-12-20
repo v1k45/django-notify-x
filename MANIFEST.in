@@ -6,4 +6,5 @@ include tox.ini
 include requirements.txt
 include test_requirements.txt
 include runtests.py
+recursive-include notify/locale *
 global-exclude *.orig *.pyc *.log *.swp local_settings.py
