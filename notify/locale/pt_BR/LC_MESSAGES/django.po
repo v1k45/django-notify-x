@@ -1,0 +1,185 @@
+# Translation to Brazilian Portuguese.
+# This file is distributed under the same license as the django-notify-x package.
+# Fernando Macedo <fgmacedo@gmail.com>, 2015.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: 0.1.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-12-20 15:49-0200\n"
+"PO-Revision-Date: 2015-12-20 15:27-0200\n"
+"Last-Translator: Fernando Macedo <fgmacedo@gmail.com>\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: models.py:237
+#, python-brace-format
+msgid "{actor} {verb} {at} ago"
+msgstr "{actor} {verb} {at} atrás"
+
+#: models.py:239
+#, python-brace-format
+msgid "{actor} {verb} on {target} {at} ago"
+msgstr "{actor} {verb} em {target} {at} atrás"
+
+#: models.py:241
+#, python-brace-format
+msgid "{actor} {verb} {obj} on {target} {at} ago"
+msgstr "{actor} {verb} {obj} em {target} {at} atrás"
+
+#: models.py:242
+#, python-brace-format
+msgid "{description} -- {at} ago"
+msgstr "{description} -- {at} atrás"
+
+#: signals.py:42
+msgid ""
+"You must specify either a single recipient or a list of recipients, not both."
+msgstr ""
+"Você deve especificar ou um único destinatário, ou uma lista de "
+"destinatários, não os dois."
+
+#: signals.py:45
+msgid "You must specify the recipient of the notification."
+msgstr "Você deve especificar o destinatário da notificação."
+
+#: signals.py:48
+msgid "Actor not specified."
+msgstr "Ator não especificado."
+
+#: signals.py:51
+msgid "Verb not specified."
+msgstr "Verbo não especificado."
+
+#: signals.py:54
+msgid "Supplied recipient is not an instance of list."
+msgstr "O destinatário fornecido não é uma lista."
+
+#: templates/notifications/all.html:4
+msgid "Notifications"
+msgstr "Notificações"
+
+#: templates/notifications/all.html:7
+msgid "Mark all as read"
+msgstr "Marcar todas como lidas"
+
+#: templates/notifications/all.html:8
+msgid "Mark all as unread"
+msgstr "Marcar todas como não lidas"
+
+#: templates/notifications/includes/default.html:6
+#, python-format
+msgid ""
+"\n"
+"            <a href=\"%(actor_url)s\">%(actor)s</a> %(verb)s on <a href="
+"\"%(target_url)s\">%(target)s</a>\n"
+"        "
+msgstr ""
+"\n"
+"            <a href=\"%(actor_url)s\">%(actor)s</a> %(verb)s em <a href="
+"\"%(target_url)s\">%(target)s</a>\n"
+"        "
+
+#: templates/notifications/includes/default.html:10
+#, python-format
+msgid ""
+"\n"
+"            <a href=\"%(actor_url)s\">%(actor)s</a> %(verb)s\n"
+"        "
+msgstr ""
+
+#: templates/notifications/includes/default.html:14
+#, python-format
+msgid "%(created)s ago"
+msgstr "%(created)s atrás"
+
+#: templates/notifications/includes/default.html:19
+msgid "unread,read"
+msgstr "não lida,lida"
+
+#: templates/notifications/includes/default.html:19
+#, python-format
+msgid "Mark as %(read)s"
+msgstr "Marcar como %(read)s"
+
+#: templatetags/notification_tags.py:23 templatetags/notification_tags.py:30
+#, python-format
+msgid "The second argument in %r must be 'for'"
+msgstr "O segundo argumento em %r deve ser 'for'"
+
+#: templatetags/notification_tags.py:34
+#, python-brace-format
+msgid "{tag} takes 2 or 3 arguments, {len} given."
+msgstr "{tag} requer 2 ou 3 argumentos, {len} recebidos."
+
+#: templatetags/notification_tags.py:53
+msgid "<b>No notifications yet.</b>"
+msgstr "<b>Sem notificações ainda.</b>"
+
+#: templatetags/notification_tags.py:135
+msgid "Max arguments are two"
+msgstr "Máximo de 2 argumentos"
+
+#: templatetags/notification_tags.py:137
+msgid "First argument must be 'for'"
+msgstr "O primeiro argumento deve ser 'for'"
+
+#: templatetags/notification_tags.py:140
+msgid "Second argument must either 'box' or 'page'"
+msgstr "Segundo argumento deve ser ou 'box' ou 'page'"
+
+#: views.py:75
+msgid "Marked as read"
+msgstr "Marcado como lida"
+
+#: views.py:78
+msgid "Marked as unread"
+msgstr "Marcado como não lida"
+
+#: views.py:81
+msgid "Invalid mark action."
+msgstr "Marcação inválida."
+
+#: views.py:84 views.py:155
+msgid "Notification does not exists."
+msgstr "Não existem notificações."
+
+#: views.py:87 views.py:158
+msgid "Invalid Notification ID"
+msgstr "ID de notificação inválida"
+
+#: views.py:110
+msgid "Marked all notifications as read"
+msgstr "Todas as notificações marcadas como lidas"
+
+#: views.py:113
+msgid "Marked all notifications as unread"
+msgstr "Todas as notificações marcadas como não lidas"
+
+#: views.py:115
+msgid "Invalid mark action"
+msgstr "Marcação inválida."
+
+#: views.py:152
+msgid "Deleted notification successfully"
+msgstr "Notificação apagada com sucesso"
+
+#: views.py:237
+msgid "Notifications successfully retrieved."
+msgstr "Notificação obtida com sucesso."
+
+#: views.py:238
+msgid "No new notifications."
+msgstr "Sem novas notificações."
+
+#: views.py:257
+msgid "Invalid notification flag"
+msgstr "Sinalizador de notificação inválido."
+
+#: views.py:259
+msgid "Notification flag not sent."
+msgstr "Sinalizador de notificação não enviado."
