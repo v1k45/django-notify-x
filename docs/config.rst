@@ -8,7 +8,7 @@ If you are planning to handle things over AJAX, make sure you run this command b
 
     $ python manage.py collectstatic
 
-This will copy ``notifyX.js`` to your static root directory.
+This will copy ``notifyX.js`` and ``notifyX.min.js`` to your static root directory.
 
 The ``notifyX.js`` file handles all the AJAX related actions ranging from marking notifications as read/unread to fetching new notifications and updating the notification box.
 
@@ -17,6 +17,12 @@ Now, include the ``notifyX.js`` static file in your base template.::
     {% load staticfiles %}
     ....
     <script src="{% static "notify/notifyX.js" %}"></script>
+    <!-- OR -->
+    <script src="{% static "notify/notifyX.min.js" %}"></script>
+
+
+.. note::
+    The other file, ``notifyX.min.js`` is a minified version of ``notifyX.js``. It is intended work the same as the original file. The advantage of a minified javascript file is that it removes unnecessary things and ultimately reduces the size of the final file with same functionality.
 
 .. warning::
     Make sure you include ``notifyX.js`` after you've included latest JQuery javascript file. This script uses JQuery to handle AJAX calls and DOM manipulation. It will break if JQuery is not included before it.
