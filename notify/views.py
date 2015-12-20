@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.utils.http import is_safe_url
+from django.utils.translation import ugettext as _
 from django.views.decorators.http import require_POST
 from .models import Notification
 from .utils import render_notification
@@ -71,19 +72,19 @@ def mark(request):
                                                     recipient=request.user)
             if action == 'read':
                 notification.mark_as_read()
-                msg = "Marked as read"
+                msg = _("Marked as read")
             elif action == 'unread':
                 notification.mark_as_unread()
-                msg = "Marked as unread"
+                msg = _("Marked as unread")
             else:
                 success = False
-                msg = "Invalid mark action."
+                msg = _("Invalid mark action.")
         except Notification.DoesNotExist:
             success = False
-            msg = "Notification does not exists."
+            msg = _("Notification does not exists.")
     else:
         success = False
-        msg = "Invalid Notification ID"
+        msg = _("Invalid Notification ID")
 
     ctx = {'msg': msg, 'success': success, 'action': action}
 
@@ -106,12 +107,12 @@ def mark_all(request):
 
     if action == 'read':
         request.user.notifications.read_all()
-        msg = "Marked all notifications as read"
+        msg = _("Marked all notifications as read")
     elif action == 'unread':
         request.user.notifications.unread_all()
-        msg = "Marked all notifications as unread"
+        msg = _("Marked all notifications as unread")
     else:
-        msg = "Invalid mark action"
+        msg = _("Invalid mark action")
         success = False
 
     ctx = {'msg': msg, 'success': success, 'action': action}
@@ -148,13 +149,13 @@ def delete(request):
                 notification.save()
             else:
                 notification.delete()
-            msg = "Deleted notification successfully"
+            msg = _("Deleted notification successfully")
         except Notification.DoesNotExist:
             success = False
-            msg = "Notification does not exists."
+            msg = _("Notification does not exists.")
     else:
         success = False
-        msg = "Invalid Notification ID"
+        msg = _("Invalid Notification ID")
 
     ctx = {'msg': msg, 'success': success, }
 
@@ -233,8 +234,8 @@ def notification_update(request):
             new_notifications = request.user.notifications.filter(
                 id__gt=notification.id).active()
 
-            msg = "Notifications successfully retrieved." \
-                if new_notifications else "No new notifications."
+            msg = _("Notifications successfully retrieved.") \
+                if new_notifications else _("No new notifications.")
             notification_list = []
             for nf in new_notifications:
                 notification = nf.as_json()
@@ -253,9 +254,9 @@ def notification_update(request):
             return JsonResponse(ctx)
 
         except Notification.DoesNotExist:
-            msg = "Invalid notification flag"
+            msg = _("Invalid notification flag")
     else:
-        msg = "Notification flag not sent."
+        msg = _("Notification flag not sent.")
 
     ctx = {"success": False, "msg": msg}
     return JsonResponse(ctx)

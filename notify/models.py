@@ -7,6 +7,7 @@ from jsonfield.fields import JSONField
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.html import escape
 from django.utils.timesince import timesince
+from django.utils.translation import ugettext_lazy as _
 
 
 class NotificationQueryset(QuerySet):
@@ -233,12 +234,12 @@ class Notification(models.Model):
 
         if ctx['actor']:
             if not ctx['target']:
-                return "{actor} {verb} {at} ago".format(**ctx)
+                return _("{actor} {verb} {at} ago").format(**ctx)
             elif not ctx['obj']:
-                return "{actor} {verb} on {target} {at} ago".format(**ctx)
+                return _("{actor} {verb} on {target} {at} ago").format(**ctx)
             elif ctx['obj']:
-                return "{actor} {verb} {obj} on {target} {at}ago".format(**ctx)
-        return "{description} -- {at} ago".format(**ctx)
+                return _("{actor} {verb} {obj} on {target} {at} ago").format(**ctx)
+        return _("{description} -- {at} ago").format(**ctx)
 
     def mark_as_read(self):
         """

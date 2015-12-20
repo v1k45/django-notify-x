@@ -1,13 +1,22 @@
+{% load i18n %}
 <li data-nf-id="{{ notification.id }}" id="nf-{{ notification.id }}" class="notification list-group-item {{ notification.read|yesno:'read,unread' }}">
-    <a href="{{ notification.actor_url }}">{{ notification.actor }}</a> {{ notification.verb }}
+{% block notification %}
+    <a href="{{ notification.actor_url }}">{{ notification.actor }}</a> {{ notification.verb }} {% if notification.target %} on <a href="{{ notification.target_url }}">{{ notification.target }}</a> {% endif %}
     {% if notification.target %}
-        on <a href="{{ notification.target_url }}">{{ notification.target }}</a>
+        {% blocktrans with actor_url=notification.actor_url actor=notification.actor verb=notification.verb target=notification.target target_url=notification.target_url%}
+            <a href="{{ actor_url }}">{{ actor }}</a> {{ verb }} on <a href="{{ target_url }}">{{ target }}</a>
+        {% endblocktrans %}
+    {% else %}
+        {% blocktrans with actor_url=notification.actor_url actor=notification.actor verb=notification.verb%}
+            <a href="{{ actor_url }}">{{ actor }}</a> {{ verb }}
+        {% endblocktrans %}
     {% endif %}
-    <span class="timesince">{{ notification.created|timesince }} ago</span>
+    <span class="timesince">{% blocktrans with created=notification.created|timesince %}{{created}} ago{% endblocktrans %}</span>
+{% endblock notification %}
     <strong>{{ notification.read|yesno }}</strong>
     <button data-id="{{ notification.id }}" class="mark-notification"
             data-mark-action="{{ notification.read|yesno:'unread,read' }}">
-        Mark as {{ notification.read|yesno:'unread,read' }}
+        {% blocktrans with read=notification.read|yesno:_('unread,read') %}Mark as {{ read }}{% endblocktrans %}
     </button>
 
     <button class="delete-notification" data-id="{{ notification.id }}">
