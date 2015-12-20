@@ -328,7 +328,7 @@ class Notification(models.Model):
     def do_escape(obj):
         """
         Method to HTML escape an object or set it to None conditionally.
-        performs ``str()`` on the argument so that a foreignkey gets 
+        performs ``str()`` on the argument so that a foreignkey gets
         serialized? and spit out the ``__str__`` output instead of an Object.
 
         :param obj: Object to escape.
@@ -346,7 +346,7 @@ class Notification(models.Model):
         :return: Dictionary format of the QuerySet object.
         """
         data = {
-            "notification_id": self.id,
+            "id": self.id,
             "actor": self.do_escape(self.actor),
             "actor_url": self.do_escape(self.actor_url),
             "verb": self.do_escape(self.verb),

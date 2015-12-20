@@ -137,7 +137,7 @@ render_notifications
         {% load notification_tags %}
         {% render_notifications using request.user.notifications.active %}
 
-    By default, the above tag will render notifications on the notifications page and not on the notification box. So it will use a template corresponing to it's ``nf_type`` with a ``.htm`` suffix nothing more.
+    By default, the above tag will render notifications on the notifications page and not on the notification box. So it will use a template corresponing to it's ``nf_type`` with a ``.html`` suffix nothing more.
 
     To render notificatons on a notifications box::
 
