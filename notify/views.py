@@ -3,10 +3,10 @@ from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
-from django.template.loader import render_to_string
 from django.utils.http import is_safe_url
 from django.views.decorators.http import require_POST
-from notify.models import Notification
+from .models import Notification
+from .utils import render_notification
 
 # TODO: Convert function-based views to Class-based views.
 
@@ -224,12 +224,7 @@ def notification_update(request):
     :return: Notification updates (if any) in JSON format.
     """
     flag = request.GET.get('flag', None)
-    success = True
-
-    if flag.isdigit():
-        last_notification = int(flag)
-    else:
-        last_notification = None
+    last_notification = int(flag) if flag.isdigit() else None
 
     if last_notification:
         try:
@@ -238,37 +233,29 @@ def notification_update(request):
             new_notifications = request.user.notifications.filter(
                 id__gt=notification.id).active()
 
-            if new_notifications:
-                msg = "Notifications successfully retrieved."
-                notification_list = [nf.as_json() for nf in new_notifications]
-                for notification in notification_list:
-                    templates = [
-                        'notifications/includes/%s_box.html'
-                        % notification['nf_type'],
-                        'notifications/includes/default_box.html']
-                    notification['html'] = render_to_string(templates,
-                                                            notification)
-            else:
-                msg = "No new notifications."
-                notification_list = []
+            msg = "Notifications successfully retrieved." \
+                if new_notifications else "No new notifications."
+            notification_list = []
+            for nf in new_notifications:
+                notification = nf.as_json()
+                notification_list.append(notification)
+                notification['html'] = render_notification(
+                    nf, render_target='box', **notification)
 
             ctx = {
                 "retrieved": len(new_notifications),
                 "unread_count": request.user.notifications.unread().count(),
                 "notifications": notification_list,
-                "success": success,
+                "success": True,
                 "msg": msg,
             }
 
             return JsonResponse(ctx)
 
         except Notification.DoesNotExist:
-            success = False
             msg = "Invalid notification flag"
     else:
-        success = False
         msg = "Notification flag not sent."
 
-    ctx = {"success": success, "msg": msg}
-
+    ctx = {"success": False, "msg": msg}
     return JsonResponse(ctx)

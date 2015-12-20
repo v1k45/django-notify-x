@@ -508,6 +508,11 @@ class NotificationTemplateTagTest(TestCase):
     {% render_notifications using notifications for page %}
     """)
 
+    RENDER_TEMPLATE_FOR_BOX = Template("""
+    {% load notification_tags %}
+    {% render_notifications using notifications for box %}
+    """)
+
     JS_INCLUSION = Template("""
     {% load notification_tags  %}
     {% include_notify_js_variables %}
@@ -540,6 +545,14 @@ class NotificationTemplateTagTest(TestCase):
                     actor_text='Joe', verb='followed you')
         nf_list = Notification.objects.filter(recipient=self.user).active()
         rendered = self.RENDER_TEMPLATE.render(
+            Context({'notifications': nf_list}))
+        self.assertIn('followed you', rendered)
+
+    def test_render_template_tag_for_box(self):
+        notify.send(User, recipient=self.user,
+                    actor_text='Joe', verb='followed you')
+        nf_list = Notification.objects.filter(recipient=self.user).active()
+        rendered = self.RENDER_TEMPLATE_FOR_BOX.render(
             Context({'notifications': nf_list}))
         self.assertIn('followed you', rendered)
 

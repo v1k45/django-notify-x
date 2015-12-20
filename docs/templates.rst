@@ -43,23 +43,31 @@ For formatting notification
 HTML output format for individual notifications are supposed to be stored in ``notifications/includes/`` with the name of their ``nf_type`` ending with a ``.html``.
 
 .. note::
-     If you're going to use live ajax notifications and you have a notification box to display instant notifications on your project, you need to create one more file which starts with the corressponding ``nf_type`` and ends with ``_box.html``.
+     If you're going to use live ajax notifications and you have a notification box to display instant notifications on your project, you might want to create one more file which starts with the corressponding ``nf_type`` and ends with ``_box.html`` in order to use different formatting.
 
 
-For example, if you have notifications with ``nf_type`` set to ``followed_user``, you'll create two files in your ``notifications/includes/`` directory of your template directory.
+For example, if you have notifications with ``nf_type`` set to ``followed_user``, the name of the custom template files will be::
 
-**The name of the files will be**::
-    
     followed_user.html
     followed_user_box.html
 
-.. note::
-    Even if the names seem to be same, there are some differences you need to be careful about. Have a look at the example templates below.
+Put those files in ``notifications/includes/`` directory of your template directory.
+
+For full page notifications, we'll try to find a template in the following order::
+
+    followed_user.html
+    defaul.html
+
+For live ajax notifications, we'll try to find a template in the following order::
+
+    followed_user_box.html
+    followed_user.html
+    default_box.html
 
 
-**Contents of ``notifications/includes/followed_user.html``**::
+**Contents of `notifications/includes/followed_user.html`**::
 
-    <!-- this format is not compulsory, you can have HTML that suits your project -->    
+    <!-- this format is not compulsory, you can have HTML that suits your project -->
     <li data-nf-id="{{ notification.id }}"
     class="notification list-group-item {{ notification.read|yesno:'read,unread' }}">
         <a href="{{ notification.actor_url }}">{{ notification.actor }}</a> {{ notification.verb }}
@@ -74,36 +82,26 @@ For example, if you have notifications with ``nf_type`` set to ``followed_user``
         <button class="delete-notification" data-id="{{ notification.id }}">X</button>
     </li>
 
-**Contents of ``notifications/includes/followed_user_box.html``**::
+**Contents of `notifications/includes/followed_user_box.html`**::
 
-    <!-- this format is not compulsory, you can have HTML that suits your project -->    
-    <li data-nf-id="{{ notification_id }}"
-    class="notification-box list-group-item {{ read|yesno:'read,unread' }}">
-        
-        <a href="{{ actor_url }}">{{ actor }}</a> {{ verb }}
-        
-        <span class="timesince">{{ created|timesince }}</span>
-        
-        <button data-id="{{ notification_id }}" class="mark-notification"
-                data-mark-action="{{ read|yesno:'unread,read' }}">
-            Mark as {{ read|yesno:'unread,read' }}
+    <!-- this format is not compulsory, you can have HTML that suits your project -->
+    <li data-nf-id="{{ notification.id }}"
+    class="notification list-group-item {{ notification.read|yesno:'read,unread' }}">
+        <a href="{{ notification.actor_url }}">{{ notification.actor }}</a> {{ notification.verb }}
+        <span class="timesince">{{ notification.created|timesince }} ago</span>
+
+        <button data-id="{{ notification.id }}" class="mark-notification"
+            data-mark-action="{{ notification.read|yesno:'unread,read' }}">
+
+            Mark as {{ notification.read|yesno:'unread,read' }}
+
         </button>
-
-        <button class="delete-notification" data-id="{{ notification_id }}">X</button>
+        <button class="delete-notification" data-id="{{ notification.id }}">X</button>
     </li>
 
-Apart from the formatting of HTML elements, there are some differences you need to take care of.
+.. note::
+    The contents of the examples above are identical, in this case you might create only the `followed_user.html` file.
 
-**They are**:
-
-    - Template1 renders notification context using ``notification.`` as a variable prefix. It is nothing but the dictornary key.
-    - Template2, however, renders notification context without an explicit ``notification.`` dictonary key.
-    - The way of rendering ``notification ID`` is different in both.
-        - Template 1 calls ``{{ notification.id }}``
-        - Template 2 calls ``{{ notification_id }}``
-        - **They can be easily mistaken**.
-
-This is because the normal template takes ``notification`` as context from the QuerySet, where as the template used on the notification box takes context from ``.as_json()`` method of the model instance. This serializes the notification object as a JSON data without a parent key, thus all values are called directly.
 
 Things to take care when writing notification templates
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -142,7 +140,7 @@ render_notifications
     By default, the above tag will render notifications on the notifications page and not on the notification box. So it will use a template corresponing to it's ``nf_type`` with a ``.htm`` suffix nothing more.
 
     To render notificatons on a notifications box::
-        
+
         {% load notification_tags %}
         {% render_notifications using request.user.notifications.active for box %}
 
@@ -171,7 +169,7 @@ include_notify_js_variables
 
     .. note::
         **Changed in version 0.1.1**
-        
+
         In the previous versions, it was necessarty to add notification check before including the JS variables using the ``include_notify_js_variables`` template tag. It is no more required. The new update checks for authenticated users and then renders the tempalte if required.
 
 user_notifications
