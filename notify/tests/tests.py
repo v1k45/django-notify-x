@@ -554,6 +554,9 @@ class NotificationTemplateTagTest(TestCase):
         nf_list = Notification.objects.filter(recipient=self.user).active()
         rendered = self.RENDER_TEMPLATE_FOR_BOX.render(
             Context({'notifications': nf_list}))
+        # to make things differentiable we'll use n-rTt-bx as a flag
+        # in the default ``box`` template.
+        self.assertIn('n-rTt-bx', rendered)
         self.assertIn('followed you', rendered)
 
     def test_render_template_tag_with_empty_notifications(self):
