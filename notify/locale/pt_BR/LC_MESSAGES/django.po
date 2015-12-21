@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-20 22:25-0200\n"
+"POT-Creation-Date: 2015-12-21 09:37-0200\n"
 "PO-Revision-Date: 2015-12-20 15:27-0200\n"
 "Last-Translator: Fernando Macedo <fgmacedo@gmail.com>\n"
 "Language: pt_BR\n"
@@ -16,22 +16,94 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: models.py:237
+#: models.py:167
+msgid "Notification receiver"
+msgstr "Receptor da notificação"
+
+#: models.py:173
+msgid "Content type of actor object"
+msgstr "Tipo de conteúdo do objeto ator"
+
+#: models.py:177
+msgid "ID of the actor object"
+msgstr "ID do objeto ator"
+
+#: models.py:184
+msgid "Anonymous text for actor"
+msgstr "Texto anônimo para o ator"
+
+#: models.py:188
+msgid "Anonymous URL for actor"
+msgstr "URL anônima para o ator"
+
+#: models.py:192
+msgid "Verb of the action"
+msgstr "Verbo da ação"
+
+#: models.py:196
+msgid "Description of the notification"
+msgstr "Descrição da notificação"
+
+#: models.py:199
+msgid "Type of notification"
+msgstr "Tipo da notificação"
+
+#: models.py:207
+msgid "Content type of target object"
+msgstr "Tipo de conteúdo do objeto alvo"
+
+#: models.py:211 models.py:232
+msgid "ID of the target object"
+msgstr "ID do objeto alvo"
+
+#: models.py:218
+msgid "Anonymous text for target"
+msgstr "Texto anônimo para o alvo"
+
+#: models.py:222
+msgid "Anonymous URL for target"
+msgstr "URL anônima para o alvo"
+
+#: models.py:228
+msgid "Content type of action object"
+msgstr "Tipo de conteúdo para o objeto da ação"
+
+#: models.py:238
+msgid "Anonymous text for action object"
+msgstr "Texto anônimo para o objeto da ação"
+
+#: models.py:242
+msgid "Anonymous URL for action object"
+msgstr "URL anônima para o objeto da ação"
+
+#: models.py:245
+msgid "JSONField to store addtional data"
+msgstr "Campo JSON para armazenar dados adicionais"
+
+#: models.py:250
+msgid "Read status"
+msgstr "Status da leitura"
+
+#: models.py:252
+msgid "Soft delete status"
+msgstr "Status da exclusão lógica"
+
+#: models.py:271
 #, python-brace-format
 msgid "{actor} {verb} {at} ago"
 msgstr "{actor} {verb} {at} atrás"
 
-#: models.py:239
+#: models.py:273
 #, python-brace-format
 msgid "{actor} {verb} on {target} {at} ago"
 msgstr "{actor} {verb} em {target} {at} atrás"
 
-#: models.py:241
+#: models.py:275
 #, python-brace-format
 msgid "{actor} {verb} {obj} on {target} {at} ago"
 msgstr "{actor} {verb} {obj} em {target} {at} atrás"
 
-#: models.py:242
+#: models.py:276
 #, python-brace-format
 msgid "{description} -- {at} ago"
 msgstr "{description} -- {at} atrás"
