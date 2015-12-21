@@ -161,6 +161,12 @@ $(document).ready(function updateNotifications() {
     var $notification_box = $(nfBoxListClassSelector);
     var flag = $notification_box.children().first().attr('data-nf-id');
 
+    if (!flag && $notification_box.length == 0) {
+        console.log('Notity improperly configured. No data-nf-id was found.')
+        console.log('  Make sure you have a container element with \''+ nfBoxListClassSelector + '\' as css class.');
+        return;
+    }
+
     $.ajax({
         type: 'GET',
         url: updateNotificationUrl + '?flag=' + flag,
