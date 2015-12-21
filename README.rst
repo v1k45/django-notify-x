@@ -73,8 +73,8 @@ You've successfully installed ``django-notify-x``!
 Sending notifications
 =====================
 
-Sending notifications to single user
-------------------------------------
+Sending notifications to a single user:
+---------------------------------------
 
 .. code-block:: python
 
@@ -95,8 +95,8 @@ Sending notifications to single user
 
 Easy as pie, isn't it?
 
-Sending notifications to to multiple users:
--------------------------------------------
+Sending notifications to multiple users:
+----------------------------------------
 
 .. code-block:: python
 
