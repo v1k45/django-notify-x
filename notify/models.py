@@ -352,7 +352,7 @@ class Notification(models.Model):
             "actor_url": self.do_escape(self.actor_url),
             "verb": self.do_escape(self.verb),
             "description": self.do_escape(self.description),
-            "read": self.do_escape(self.read),
+            "read": self.read,
             "nf_type": self.do_escape(self.nf_type),
             "target": self.do_escape(self.target),
             "target_url": self.do_escape(self.target_url),
