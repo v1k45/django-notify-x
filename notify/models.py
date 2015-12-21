@@ -163,59 +163,93 @@ class Notification(models.Model):
 
     recipient = models.ForeignKey(settings.AUTH_USER_MODEL,
                                   related_name='notifications',
-                                  on_delete=models.CASCADE)
-    # actor attributes.
-    actor_content_type = models.ForeignKey(ContentType,
-                                           null=True, blank=True,
-                                           related_name='notify_actor',
-                                           on_delete=models.CASCADE)
+                                  on_delete=models.CASCADE,
+                                  verbose_name=_('Notification receiver'))
 
-    actor_object_id = models.PositiveIntegerField(null=True, blank=True)
+    # actor attributes.
+    actor_content_type = models.ForeignKey(
+        ContentType, null=True, blank=True,
+        related_name='notify_actor', on_delete=models.CASCADE,
+        verbose_name=_('Content type of actor object'))
+
+    actor_object_id = models.PositiveIntegerField(
+        null=True, blank=True,
+        verbose_name=_('ID of the actor object'))
+
     actor_content_object = GenericForeignKey('actor_content_type',
                                              'actor_object_id')
 
-    actor_text = models.CharField(max_length=50, blank=True, null=True)
-    actor_url_text = models.URLField(blank=True, null=True)
+    actor_text = models.CharField(
+        max_length=50, blank=True, null=True,
+        verbose_name=_('Anonymous text for actor'))
+
+    actor_url_text = models.URLField(
+        blank=True, null=True,
+        verbose_name=_('Anonymous URL for actor'))
 
     # basic details.
-    verb = models.CharField(max_length=50)
-    description = models.CharField(max_length=255,
-                                   blank=True, null=True)
-    nf_type = models.CharField(max_length=20, default='default')
+    verb = models.CharField(max_length=50,
+                            verbose_name=_('Verb of the action'))
+
+    description = models.CharField(
+        max_length=255, blank=True, null=True,
+        verbose_name=_('Description of the notification'))
+
+    nf_type = models.CharField(max_length=20, default='default',
+                               verbose_name=_('Type of notification'))
 
     # TODO: Add a field to store notification cover images.
 
     # target attributes.
-    target_content_type = models.ForeignKey(ContentType,
-                                            null=True, blank=True,
-                                            related_name='notify_target',
-                                            on_delete=models.CASCADE)
+    target_content_type = models.ForeignKey(
+        ContentType, null=True, blank=True,
+        related_name='notify_target', on_delete=models.CASCADE,
+        verbose_name=_('Content type of target object'))
 
-    target_object_id = models.PositiveIntegerField(null=True, blank=True)
+    target_object_id = models.PositiveIntegerField(
+        null=True, blank=True,
+        verbose_name=_('ID of the target object'))
 
     target_content_object = GenericForeignKey('target_content_type',
                                               'target_object_id')
 
-    target_text = models.CharField(max_length=50, blank=True, null=True)
-    target_url_text = models.URLField(blank=True, null=True)
+    target_text = models.CharField(
+        max_length=50, blank=True, null=True,
+        verbose_name=_('Anonymous text for target'))
+
+    target_url_text = models.URLField(
+        blank=True, null=True,
+        verbose_name=_('Anonymous URL for target'))
 
     # obj attributes.
-    obj_content_type = models.ForeignKey(ContentType,
-                                         null=True, blank=True,
-                                         related_name='notify_object',
-                                         on_delete=models.CASCADE)
+    obj_content_type = models.ForeignKey(
+        ContentType, null=True, blank=True,
+        related_name='notify_object', on_delete=models.CASCADE,
+        verbose_name=_('Content type of action object'))
 
-    obj_object_id = models.PositiveIntegerField(null=True, blank=True)
+    obj_object_id = models.PositiveIntegerField(
+        null=True, blank=True,
+        verbose_name=_('ID of the target object'))
+
     obj_content_object = GenericForeignKey('obj_content_type', 'obj_object_id')
-    obj_text = models.CharField(max_length=50, blank=True, null=True)
-    obj_url_text = models.URLField(blank=True, null=True)
 
-    extra = JSONField(null=True, blank=True)
+    obj_text = models.CharField(
+        max_length=50, blank=True, null=True,
+        verbose_name=_('Anonymous text for action object'))
+
+    obj_url_text = models.URLField(
+        blank=True, null=True,
+        verbose_name=_('Anonymous URL for action object'))
+
+    extra = JSONField(null=True, blank=True,
+                      verbose_name=_('JSONField to store addtional data'))
 
     # Advanced details.
     created = models.DateTimeField(auto_now=False, auto_now_add=True)
-    read = models.BooleanField(default=False)
-    deleted = models.BooleanField(default=False)
+    read = models.BooleanField(default=False,
+                               verbose_name=_('Read status'))
+    deleted = models.BooleanField(default=False,
+                                  verbose_name=_('Soft delete status'))
 
     objects = NotificationQueryset.as_manager()
 
