@@ -1,6 +1,14 @@
 Changelog
 =========
 
+- Version 0.1.2
+    - Fernando added translation support for ``pt_BR``.
+    - Bug fixes in the javascript file.
+    - More roboust mechanism when performing read/unread actions on the client-side.
+    - Consistent notification context.
+    - Registered ``Notification`` Model in Admin Site.
+    - Updated on 21st December 2015
+
 - Version 0.1.1
     - Minor changes
     - Added ``user_notifications`` template tag.
