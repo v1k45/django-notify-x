@@ -74,7 +74,8 @@ For live ajax notifications, we'll try to find a template in the following order
         <span class="timesince">{{ notification.created|timesince }} ago</span>
 
         <button data-id="{{ notification.id }}" class="mark-notification"
-            data-mark-action="{{ notification.read|yesno:'unread,read' }}">
+            data-mark-action="{{ notification.read|yesno:'unread,read' }}"
+            data-toggle-text="Mark as {{ notification.read|yesno:_('read,unread') }}">
 
             Mark as {{ notification.read|yesno:'unread,read' }}
 
@@ -91,7 +92,8 @@ For live ajax notifications, we'll try to find a template in the following order
         <span class="timesince">{{ notification.created|timesince }} ago</span>
 
         <button data-id="{{ notification.id }}" class="mark-notification"
-            data-mark-action="{{ notification.read|yesno:'unread,read' }}">
+            data-mark-action="{{ notification.read|yesno:'unread,read' }}"
+            data-toggle-text="Mark as {{ notification.read|yesno:_('read,unread') }}">
 
             Mark as {{ notification.read|yesno:'unread,read' }}
 
@@ -114,6 +116,10 @@ data-nf-id
 data-mark-action & data-id
     Attribute assigned to an element which will handle the control for marking a notification as read or unread.
     ``data-mark-action`` will also be used when marking all notifications as read or unread.
+
+data-mark-action & data-toggle-text
+    The element that holds the attribute ``data-mark-action`` will have it's innerHTML text replaced to reflect the toggle behavior.
+    In order to customize the toggled text, you should provide the opposite text into a ``data-toggle-text`` attribute.
 
 delete-notification & data-id
     Attribute assigned to an element which handles deleting of a notification.
