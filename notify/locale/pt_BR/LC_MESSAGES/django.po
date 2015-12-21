@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 0.1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-12-20 15:49-0200\n"
+"POT-Creation-Date: 2015-12-20 22:25-0200\n"
 "PO-Revision-Date: 2015-12-20 15:27-0200\n"
 "Last-Translator: Fernando Macedo <fgmacedo@gmail.com>\n"
 "Language: pt_BR\n"
@@ -71,7 +71,7 @@ msgstr "Marcar todas como lidas"
 msgid "Mark all as unread"
 msgstr "Marcar todas como não lidas"
 
-#: templates/notifications/includes/default.html:6
+#: templates/notifications/includes/default.html:5
 #, python-format
 msgid ""
 "\n"
@@ -84,7 +84,7 @@ msgstr ""
 "\"%(target_url)s\">%(target)s</a>\n"
 "        "
 
-#: templates/notifications/includes/default.html:10
+#: templates/notifications/includes/default.html:9
 #, python-format
 msgid ""
 "\n"
@@ -92,19 +92,24 @@ msgid ""
 "        "
 msgstr ""
 
-#: templates/notifications/includes/default.html:14
+#: templates/notifications/includes/default.html:13
 #, python-format
 msgid "%(created)s ago"
 msgstr "%(created)s atrás"
 
-#: templates/notifications/includes/default.html:19
-msgid "unread,read"
-msgstr "não lida,lida"
+#: templates/notifications/includes/default.html:17
+msgid "read,unread"
+msgstr "lida,não lida"
 
-#: templates/notifications/includes/default.html:19
+#: templates/notifications/includes/default.html:17
+#: templates/notifications/includes/default.html:18
 #, python-format
 msgid "Mark as %(read)s"
 msgstr "Marcar como %(read)s"
+
+#: templates/notifications/includes/default.html:18
+msgid "unread,read"
+msgstr "não lida,lida"
 
 #: templatetags/notification_tags.py:23 templatetags/notification_tags.py:30
 #, python-format

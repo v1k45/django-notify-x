@@ -9,8 +9,11 @@ var markSuccess = function (response, notification) {
         rmClass = readNotificationClass;
         action = 'read';
     }
-    console.log(notification.closest(nfClassSelector));
+    // console.log(notification.closest(nfClassSelector));
     notification.closest(nfSelector).removeClass(rmClass).addClass(mkClass);
     notification.attr('data-mark-action', action);
-    notification.html('Mark as '+ action);
+
+    toggle_text = notification.attr('data-toggle-text') || 'Mark as ' + action;
+    notification.attr('data-toggle-text', notification.html());
+    notification.html(toggle_text);
 };

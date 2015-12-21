@@ -1,6 +1,6 @@
 var markAllSuccess = function (response) {
     //console.log(response);
-    console.log(response.action);
+    // console.log(response.action);
     if (response.action == 'read') {
         var mkClass = readNotificationClass;
         var rmClass = unreadNotificationClass;
@@ -8,7 +8,7 @@ var markAllSuccess = function (response) {
         mkClass = unreadNotificationClass;
         rmClass = readNotificationClass;
     }
-    console.log(mkClass);
-    console.log(rmClass);
+    // console.log(mkClass);
+    // console.log(rmClass);
     $(nfSelector).removeClass(rmClass).addClass(mkClass);
 };
