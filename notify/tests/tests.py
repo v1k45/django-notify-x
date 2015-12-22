@@ -500,6 +500,66 @@ class NotificationViewTest(TestCase):
 
         self.assertFalse(resp2['success'])
 
+    def test_read_and_redirect(self):
+        """
+        when users visits the view, they are redirected
+        to the supplied next url. At the same time, the
+        supplied notification id is marked as read.
+        """
+        nf = Notification.objects.get(pk=1)
+        self.assertFalse(nf.read)
+        self.assertEqual(nf.recipient.username, 'user-0')
+
+        target_page = reverse('notifications:read_and_redirect', args=[nf.id])
+        url = "{}?next=/home/".format(target_page)
+        response = self.client.get(url)
+
+        self.assertRedirects(response, "http://testserver/home/",
+                             target_status_code=404, status_code=302)
+        nf_new = Notification.objects.get(pk=1)
+        self.assertTrue(nf_new.read)
+
+    def test_read_and_redirect_unsafe_url(self):
+        """
+        when the ``next`` parameter is an unsafe url,
+        user is redirected to the notifications page.
+        """
+        nf = Notification.objects.get(pk=1)
+        self.assertFalse(nf.read)
+        self.assertEqual(nf.recipient.username, 'user-0')
+
+        target_page = reverse('notifications:read_and_redirect', args=[nf.id])
+        url = "{}?next=file:///home/".format(target_page)
+        response = self.client.get(url)
+
+        self.assertRedirects(response, reverse('notifications:all'),
+                             target_status_code=200, status_code=302)
+        nf_new = Notification.objects.get(pk=1)
+        self.assertTrue(nf_new.read)
+
+    def test_read_and_redirect_arbitrary_notification_id(self):
+        """
+        When the users (attackers) change the notification id supplied
+        in the URL manually to the notification id of another user (victim),
+        the notification won't be marked as read.
+
+        But the user (attacker) will still be redirected to the supplied
+        next page if it is safe.
+        """
+        nf = Notification.objects.get(pk=3)
+        self.assertFalse(nf.read)
+        self.assertNotEqual(nf.recipient.username, 'user-0')
+
+        target_page = reverse('notifications:read_and_redirect', args=[nf.id])
+        url = "{}?next=/home/".format(target_page)
+        response = self.client.get(url)
+
+        self.assertRedirects(response, "http://testserver/home/",
+                             target_status_code=404, status_code=302)
+
+        nf_new = Notification.objects.get(pk=3)
+        self.assertFalse(nf_new.read)
+
 
 class NotificationTemplateTagTest(TestCase):
 
