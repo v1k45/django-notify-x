@@ -260,3 +260,31 @@ def notification_update(request):
 
     ctx = {"success": False, "msg": msg}
     return JsonResponse(ctx)
+
+
+@login_required
+def read_and_redirect(request, notification_id):
+    """
+    Marks the supplied notification as read and then redirects
+    to the supplied URL from the ``next`` URL parameter.
+
+    :param request: HTTP request context.
+    :param notification_id: ID of the notification to be marked a read.
+
+    :returns: Redirect response to a valid target url.
+    """
+    notification_page = reverse('notifications:all')
+    next_page = request.GET.get('next', notification_page)
+
+    if is_safe_url(next_page):
+        target = next_page
+    else:
+        target = notification_page
+    try:
+        user_nf = request.user.notifications.get(pk=notification_id)
+        if not user_nf.read:
+            user_nf.mark_as_read()
+    except Notification.DoesNotExist:
+        pass
+
+    return redirect(target)
