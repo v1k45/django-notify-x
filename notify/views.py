@@ -1,8 +1,9 @@
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from django.http import JsonResponse, HttpResponseBadRequest
-from django.shortcuts import render, redirect
+from django.http import JsonResponse, HttpResponseBadRequest, \
+                        HttpResponseRedirect
+from django.shortcuts import render
 from django.utils.http import is_safe_url
 from django.utils.translation import ugettext as _
 from django.views.decorators.http import require_POST
@@ -29,9 +30,9 @@ def notification_redirect(request, ctx):
         if not ctx['success']:
             return HttpResponseBadRequest(ctx['msg'])
         if is_safe_url(next_page):
-            return redirect(next_page)
+            return HttpResponseRedirect(next_page)
         else:
-            return redirect(reverse('notifications:all'))
+            return HttpResponseRedirect(reverse('notifications:all'))
 
 
 @login_required
@@ -287,4 +288,4 @@ def read_and_redirect(request, notification_id):
     except Notification.DoesNotExist:
         pass
 
-    return redirect(target)
+    return HttpResponseRedirect(target)
