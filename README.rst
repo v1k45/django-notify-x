@@ -117,7 +117,7 @@ Sending notifications to multiple users:
         uploadvideo...
         ...
         video = VideoUploader.getupload()
-        followers = list(request.user.followers())
+        followers = request.user.followers()
 
         notify.send(request.user, recipient_list=followers, actor=request.user
                     verb='uploaded.', target=video, nf_type='video_upload_from_following')
@@ -130,14 +130,15 @@ How notification concatenation works:
 -------------------------------------
 
 - You just have to send the same notification (nf_type, target and recipient) with a different actor and the actor gets added in the actors list.
+
 - When you call ``notification.actor`` property, it will return the str value of the first two actors followed by the number of actors.
-    - It returns like::
+    - It returns like:
 
-        - "John did this action"
-        - "Jogn and Jane did this action"
-        - "John, Jane and 24 others did this action"
+        - *John did this action*
+        - *John and Jane did this action*
+        - *John, Jane and 24 others did this action*
 
-- The actors generic M2M fields instead of foreign keys. This means that you can have as many actors you in a single notification.
+- The ``actors`` is a generic M2M fields instead of ``GenericForeignKey``. This means that you can have as many actors you in a single notification.
 
 IMPORTANT
 =========
