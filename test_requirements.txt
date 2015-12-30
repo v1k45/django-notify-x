@@ -1,1 +1,3 @@
 django-jsonfield
+django-gm2m
+django-fake-model
