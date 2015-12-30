@@ -17,7 +17,6 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': ':memory:',
-        'TEST_NAME': os.path.join(os.path.dirname(__file__), 'test.db'),
     }
 }
 
@@ -51,3 +50,7 @@ STATICFILES_DIRS = (os.path.join(STATIC_ROOT, 'sitefiles'),)
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+TIME_ZONE = 'UTC'
+
+USE_TZ = True
