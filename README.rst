@@ -9,7 +9,7 @@ django-notify-x: quick guide
 .. image:: https://badge.fury.io/py/django-notify-x.svg
    :target: https://badge.fury.io/py/django-notify-x
 
-.. image:: https://travis-ci.org/v1k45/django-notify-x.svg
+.. image:: https://travis-ci.org/v1k45/django-notify-x.svg?branch=nf_concat_dev
    :target: https://travis-ci.org/v1k45/django-notify-x
 
 
@@ -20,6 +20,7 @@ It was inspired from `django-notifications`_ , major differences include:
     - A different approach for notification updates.
     - Less hassles when trying to format notifications differently according to their types.
     - AJAX support for everything.
+    - **Notification concatenation support!**
     - And many more.
 
 This is just a quick guide to get things to work ASAP. To dive into the details.. `Read the docs`_
@@ -30,14 +31,11 @@ How to install
 Downloading the package
 -----------------------
 
-Probably the best way to install is by using `PIP`::
-
-    $ pip install django-notify-x
-
-If you want to stay on the bleeding edge of the app::
+Download and install the package::
 
     $ git clone https://github.com/v1k45/django-notify-x.git
     $ cd django-notify-x
+    $ git checkout nf_concat_support
     $ python setup.py install
 
 Installing it on your project
@@ -70,8 +68,19 @@ Then ``collectstatic`` to make sure you've copied the JS file for AJAX functiona
 
 You've successfully installed ``django-notify-x``!
 
-Sending notifications
-=====================
+Major Changes
+=============
+
+- Anonymous activity stream components are no longer supported.
+- ``notify`` signal is renamed to ``notification`` because ``notify.send`` sounds weird (._.')
+- AJAX notifications updates are done using a different flag.
+    - It is nothing but the timestamp of last modification of notification.
+    - The use of ID based flag wasn't possible as notifications are updated instead of created when a new actor does the exact same action.
+    - Also, the HTML data attribute ``data-nf-id`` is changed to ``data-nf-flag``.
+- You are no longer forced to convert recipient_list to ``list()``.
+
+How to use
+==========
 
 Sending notifications to a single user:
 ---------------------------------------
@@ -93,7 +102,7 @@ Sending notifications to a single user:
         return YourResponse
 
 
-Easy as pie, isn't it?
+Just like you do on the stable branch.
 
 Sending notifications to multiple users:
 ----------------------------------------
@@ -115,87 +124,35 @@ Sending notifications to multiple users:
 
         return YourResponse
 
-Just change the ``recipient`` to ``recipient_list`` and send notifications to as many users you want!
+Yeah, nothing different.
 
-.. warning::
-     ``recipient_list`` expects supplied object to be a list() instance, make sure you convert your ``QuerySet`` to list() before assigning vaule.
+How notification concatenation works:
+-------------------------------------
 
-Notification Template tags
-==========================
+- You just have to send the same notification (nf_type, target and recipient) with a different actor and the actor gets added in the actors list.
+- When you call ``notification.actor`` property, it will return the str value of the first two actors followed by the number of actors.
+    - It returns like::
 
-This app comes with two notification tags, one renders notifications for you and the other includes javascript variables and functions relating the ``notifyX.js`` file.
+        - "John did this action"
+        - "Jogn and Jane did this action"
+        - "John, Jane and 24 others did this action"
 
-render_notifications
---------------------
+- The actors generic M2M fields instead of foreign keys. This means that you can have as many actors you in a single notification.
 
-    As its name reflects, it will render notifications for you. ``render_notifications`` will take at least one parameter and maximum two parameters.
+IMPORTANT
+=========
+- This app works exactly the same as the stable version, the only differences are version support.
 
-    You can use them to render notifications using a ``Notification`` QuerySet object, like this::
+- **Currently, this app only supports Django 1.8.x on Python3.**. Support for Python2.7 will be soon added.
 
-        {% load notification_tags %}
-        {% render_notifications using request.user.notifications.active %}
+- This app uses *tkhyn*'s `django-gm2m <https://bitbucket.org/tkhyn/django-gm2m>`__. For some reasons, ``gm2m`` has no support for django 1.9 as of now. This is why there is no support for versions above 1.8 in django-notify-x.
 
-    By default, the above tag will render notifications on the notifications page and not on the notification box. So it will use a template corresponing to it's ``nf_type`` with a ``.htm`` suffix nothing more.
-
-    To render notificatons on a notifications box::
-        
-        {% load notification_tags %}
-        {% render_notifications using request.user.notifications.active for box %}
-
-    This tag will look for template name with ``_box.html`` suffixed when rendering notification contents.
-
-    The ``request.user.notifications.active`` is just used to show an example of notification queryset, you can use any other way to supply a QuerySet of your choice.
-
-include_notify_js_variables
----------------------------
-
-    This tag uses ``notifications/includes/js_variables.html`` to include a template populated with JS variables and functions. You can override the values of any JS variables by creating your own version of ``js_variables.html`` template.
-
-    To include JS variables for AJAX notification support, do this::
-
-        {% load notification_tags %}
-        {% include_notify_js_variables %}
-
-    This template inclusion includes three javascript files from the template includes directory, they are::
-
-        mark_success.js
-        mark_all_success.js
-        delete_success.js
-        update_success.js
-
-    All of them are nothing but javascript function declarations which are supposed to run when a JQuery AJAX request is successfully completed.
-
-user_notifications
-------------------
-
-    The ``user_notifications`` tag is a shortcut to the ``render_notifications`` tag. It directly renders the notifications of the logged-in user on the specified target.
-
-    You can use this tag like this::
-
-        {% load notification_tags %}
-        {% user_notifications %}
-
-    This tag renders active notifications of the user by using something like ``request.user.notifications.active()``.
-
-    Just like ``render_notifications`` it also takes rendering target as an optional argument. You can specify rendering target like this::
-
-        {% load notification_tags %}
-        {% user_notifications for box %}
-
-    By default, it'll use 'page' as the rendering target and use full page notification rending template corresponding to the ``nf_type`` of the template.
-
-And other things...
-===================
-
-It will be best to `Read the Docs`_ instead of expecting every thing from a quick guide :)
+- The tests for python27 are failing only for few methods, they'll be resolved ASAP :)
 
 TODO List
 =========
 
-- Add notification concatenation support.
-    - Notification concatenation is what facebook does when you read a notification like *Bob and 18 others commented on your blogpost*.
-    - This will require non-anonymous activity stream field.
-    - I've to either remove the anonymous notification support or find another way to implement this feature.
+- Support python27 and django19
 - Convert *Function based views* to *Class Based views*.
 
 .. _django-notifications: https://www.github.com/django-notifications/django-notifications/
