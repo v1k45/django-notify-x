@@ -1,13 +1,16 @@
 from django.test import TestCase, override_settings
 from django.contrib.auth import get_user_model
 from notify.models import Notification
-from notify.signals import notify
-from django.utils import timezone
+from notify.signals import notification as notify
 from django.core.urlresolvers import reverse
 import json
 from django.template import Template, Context, RequestContext
 from django.test.client import RequestFactory
 from django.contrib.auth.models import AnonymousUser
+from .models import Entry
+from ..utils import to_timestamp, make_aware
+from django.utils import timezone as tz
+
 
 User = get_user_model()
 
@@ -28,7 +31,7 @@ class NotificationManagerTest(TestCase):
 
         for x in range(self.nf_count):
             notify.send(User, recipient=self.recipient, actor=self.actor,
-                        verb='followed you')
+                        verb='followed you', nf_type='nf-type-%s' % (x))
 
     def test_unread(self):
         self.assertEqual(Notification.objects.unread().count(), self.nf_count)
@@ -110,53 +113,197 @@ class NotificationManagerTest(TestCase):
         self.assertEqual(Notification.objects.deleted().count(), 0)
 
 
+@Entry.fake_me
 class NotificationTest(TestCase):
 
     def setUp(self):
-        self.no_of_users = 10
+        self.no_of_users = 20
 
         users = []
         for i in range(self.no_of_users):
             users.append(
-                User(username='user-%r' % i, password='pwd@user%r' % i,
+                User(username='user-%s' % i, password='pwd@user%s' % i,
                      email='user%r@test.com' % i))
         User.objects.bulk_create(users)
-
-        self.actor = User.objects.create(username='actor',
-                                         password='pwd@actor',
-                                         email='actor@test.com')
 
         self.recipient = User.objects.get(username='user-0')
         self.recipient_list = User.objects.filter(
             username__startswith='u').order_by('id')
 
-    def test_created_users(self):
-        users = User.objects.all()
-        self.assertEqual(users.count(), self.no_of_users + 1)
-        self.assertEqual(self.recipient_list.count(), self.no_of_users)
+        self.actor1 = User.objects.create_user('actor1', 'actor1@example.com',
+                                               'actor1')
+        self.actor2 = User.objects.create_user('actor2', 'actor2@example.com',
+                                               'actor2')
 
-    def test_single_user_notify(self):
-        notify.send(User, recipient=self.recipient, actor=self.actor,
-                    verb='poked you')
-        notification = Notification.objects.get(pk=1)
-        self.assertEqual(notification.recipient_id, self.recipient.id)
-        timedelta = timezone.now() - notification.created
-        self.assertLessEqual(timedelta.seconds, 60)
+        self.blog_post = self.recipient.entry_set.create()
+        self.verb = 'liked your blog post'
+        self.nf_type = 'user_liked_blog_post'
 
-    def test_multiple_user_notify(self):
-        notify.send(User, recipient_list=list(self.recipient_list),
-                    actor=self.actor, verb='uploaded a new video')
-        notifications = Notification.objects.filter(verb__startswith='u')
-        self.assertEqual(notifications.count(), self.no_of_users)
+    def test_new_nf(self):
+        start_nfs = self.recipient.notifications.all().count()
+        self.assertEqual(start_nfs, 0)
 
-        username_list = [u.username for u in self.recipient_list]
+        notify.send(User, recipient=self.recipient, actor=self.actor1,
+                    target=self.blog_post, verb=self.verb,
+                    nf_type=self.nf_type)
+        first_nfs = self.recipient.notifications.all()
+        self.assertEqual(first_nfs.count(), 1)
+        actors = first_nfs.first().actors.all().count()
+        self.assertEqual(actors, 1)
 
-        for nf in notifications:
-            self.assertIn(nf.recipient.username, username_list)
-            timedelta = timezone.now() - nf.created
-            self.assertLessEqual(timedelta.seconds, 60)
+        notify.send(User, recipient=self.recipient, actor=self.actor2,
+                    target=self.blog_post, verb=self.verb,
+                    nf_type=self.nf_type)
+        sec_nfs = self.recipient.notifications.all()
+        self.assertEqual(sec_nfs.count(), 1)
+        actors2 = sec_nfs.first().actors.all().count()
+        self.assertEqual(actors2, 2)
+
+    def test_new_nf_without_target(self):
+        start_nfs = self.recipient.notifications.all().count()
+        self.assertEqual(start_nfs, 0)
+
+        notify.send(User, recipient=self.recipient, actor=self.actor1,
+                    verb=self.verb, nf_type=self.nf_type)
+
+        first_nfs = self.recipient.notifications.all()
+        self.assertEqual(first_nfs.count(), 1)
+        actors = first_nfs.first().actors.all().count()
+        self.assertEqual(actors, 1)
+
+        notify.send(User, recipient=self.recipient, actor=self.actor2,
+                    verb=self.verb, nf_type=self.nf_type)
+        sec_nfs = self.recipient.notifications.all()
+        self.assertEqual(sec_nfs.count(), 1)
+        actors2 = sec_nfs.first().actors.all().count()
+        self.assertEqual(actors2, 2)
+
+    def test_multi_notify(self):
+
+        self.assertEqual(self.recipient_list.count(), 20)
+        nfs = Notification.objects.all()
+        self.assertEqual(nfs.count(), 0)
+
+        recipient_id_list = self.recipient_list.values_list('id', flat=True)
+        self.assertEqual(len(recipient_id_list), 20)
+
+        notify.send(User, recipient_list=self.recipient_list,
+                    target=self.blog_post, nf_type=self.nf_type,
+                    actor=self.actor1, verb='also commented')
+
+        nfs = Notification.objects.all()
+        self.assertEqual(nfs.count(), 20)
+        first_nf = nfs.first()
+        self.assertEqual(first_nf.actors.all().count(), 1)
+        notify.send(User, recipient_list=self.recipient_list,
+                    target=self.blog_post, nf_type=self.nf_type,
+                    actor=self.actor2, verb='also commented')
+        self.assertEqual(Notification.objects.all().count(), 20)
+        second_nf = Notification.objects.get(pk=1)
+        self.assertEqual(second_nf.actors.all().count(), 2)
+
+    def test_multi_user_notify_without_target(self):
+
+        self.assertEqual(self.recipient_list.count(), 20)
+        nfs = Notification.objects.all()
+        self.assertEqual(nfs.count(), 0)
+
+        recipient_id_list = self.recipient_list.values_list('id', flat=True)
+        self.assertEqual(len(recipient_id_list), 20)
+
+        notify.send(User, recipient_list=self.recipient_list,
+                    nf_type=self.nf_type, actor=self.actor1,
+                    verb='also commented')
+
+        nfs = Notification.objects.all()
+        self.assertEqual(nfs.count(), 20)
+        first_nf = nfs.first()
+        self.assertEqual(first_nf.actors.all().count(), 1)
+        notify.send(User, recipient_list=self.recipient_list,
+                    nf_type=self.nf_type, actor=self.actor2,
+                    verb='also commented')
+        self.assertEqual(Notification.objects.all().count(), 20)
+        second_nf = Notification.objects.get(pk=1)
+        self.assertEqual(second_nf.actors.all().count(), 2)
+
+    def test_multiple_notify_with_hybrid_set_of_recipient_list(self):
+
+        self.assertEqual(self.recipient_list.count(), 20)
+        self.assertEqual(Notification.objects.all().count(), 0)
+
+        recipient_id_list = self.recipient_list.values_list('id', flat=True)
+        self.assertEqual(recipient_id_list.count(), 20)
+
+        notify.send(User, recipient_list=self.recipient_list,
+                    target=self.blog_post, nf_type=self.nf_type,
+                    actor=self.actor1, verb='also commented')
+
+        nfs = Notification.objects.all()
+        self.assertEqual(nfs.count(), 20)
+        first_nf = nfs.first()
+        self.assertEqual(first_nf.actors.all().count(), 1)
+
+        no_new_users = 10
+        users = []
+        for i in range(no_new_users):
+            users.append(
+                User(username='user-new-%s' % i, password='pwd@user%s' % i,
+                     email='user%s@test.com' % i))
+        User.objects.bulk_create(users)
+
+        new_recipient_list = User.objects.filter(
+            username__startswith='u').order_by('id')
+
+        self.assertEqual(new_recipient_list.count(),
+                         self.recipient_list.count() + no_new_users)
+
+        notify.send(User, recipient_list=new_recipient_list,
+                    target=self.blog_post, nf_type=self.nf_type,
+                    actor=self.actor2, verb='also commented')
+
+        nfs_new = Notification.objects.all()
+        self.assertEqual(nfs_new.count(), 30)
+
+    def test_multiple_notify_with_hybrid_set_of_recipient_list_no_target(self):
+
+        self.assertEqual(self.recipient_list.count(), 20)
+        self.assertEqual(Notification.objects.all().count(), 0)
+
+        recipient_id_list = self.recipient_list.values_list('id', flat=True)
+        self.assertEqual(recipient_id_list.count(), 20)
+
+        notify.send(User, recipient_list=self.recipient_list,
+                    nf_type=self.nf_type, actor=self.actor1,
+                    verb='also commented')
+
+        nfs = Notification.objects.all()
+        self.assertEqual(nfs.count(), 20)
+        first_nf = nfs.first()
+        self.assertEqual(first_nf.actors.all().count(), 1)
+
+        no_new_users = 10
+        users = []
+        for i in range(no_new_users):
+            users.append(
+                User(username='user-new-%s' % i, password='pwd@user%s' % i,
+                     email='user%s@test.com' % i))
+        User.objects.bulk_create(users)
+
+        new_recipient_list = User.objects.filter(
+            username__startswith='u').order_by('id')
+
+        self.assertEqual(new_recipient_list.count(),
+                         self.recipient_list.count() + no_new_users)
+
+        notify.send(User, recipient_list=new_recipient_list,
+                    nf_type=self.nf_type, actor=self.actor2,
+                    verb='also commented')
+
+        nfs_new = Notification.objects.all()
+        self.assertEqual(nfs_new.count(), 30)
 
 
+@Entry.fake_me
 class NotificationViewTest(TestCase):
 
     def setUp(self):
@@ -165,7 +312,7 @@ class NotificationViewTest(TestCase):
         # Create recipients
         users = []
         for i in range(self.no_of_users):
-            u = User(username='user-%r' % i, email='user%r@test.com' % i)
+            u = User(username='user-%s' % i, email='user%s@test.com' % i)
             u.set_password('pwd@user')
             users.append(u)
         User.objects.bulk_create(users)
@@ -183,14 +330,17 @@ class NotificationViewTest(TestCase):
             username__startswith='u').order_by('id')
 
         # Send notifications to all recipients.
-        notify.send(User, recipient_list=list(self.recipient_list),
-                    actor=self.actor, verb='wrote a new blog post.')
+        notify.send(User, recipient_list=self.recipient_list,
+                    actor=self.actor, verb='wrote a new blog post.',
+                    nf_type='new_blog_post')
 
         # Send some more notifications to a specific user.
         self.recipient_nf_count = 11
         for i in range(10):
-            notify.send(User, recipient=self.recipient, actor_text='You',
-                        verb='reached level %r' % i)
+            notify.send(User, recipient=self.recipient, actor=self.actor,
+                        verb='reached level %s' % i,
+                        nf_type='reached_level_%s' % i)
+            # sleep(0.1)
 
         # Login this recipient
         self.assertTrue(self.client.login(username="user-0",
@@ -458,9 +608,11 @@ class NotificationViewTest(TestCase):
         self.assertEqual(self.recipient.notifications.active().count(),
                          self.recipient_nf_count)
         nf = Notification.objects.get(pk=12)
+        flag = nf.flag
+        self.assertEqual(flag, to_timestamp(nf.modified))
         self.assertEqual(nf.recipient.username, 'user-0')
 
-        url = "{}?flag=12".format(reverse('notifications:update'))
+        url = "{}?flag={}".format(reverse('notifications:update'), flag)
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
@@ -470,14 +622,12 @@ class NotificationViewTest(TestCase):
         self.assertTrue(resp['success'])
         self.assertEqual(resp['unread_count'],
                          self.recipient.notifications.unread().count())
-        notifications = self.recipient.notifications.active().filter(
-            id__gt=12)
-        self.assertEqual(resp['retrieved'],
-                         notifications.count())
 
-        for json_nf in resp['notifications']:
-            self.assertIn(json_nf['id'],
-                          [nf.id for nf in notifications])
+        notifications = self.recipient.notifications.filter(
+            modified__gt=make_aware(tz.datetime.fromtimestamp(flag))).unread()
+
+        self.assertListEqual([nf['id'] for nf in resp['notifications']],
+                             [nf.id for nf in notifications])
 
     def test_update_view_with_wrong_flag_value(self):
         nf = Notification.objects.get(pk=3)
@@ -492,7 +642,7 @@ class NotificationViewTest(TestCase):
         self.assertFalse(resp['success'])
 
         # A notification that does not exists
-        url2 = "{}?flag=123456789".format(reverse('notifications:update'))
+        url2 = "{}?flag=67896546546546".format(reverse('notifications:update'))
         response2 = self.client.get(url2)
 
         self.assertEqual(response2.status_code, 200)
@@ -595,22 +745,18 @@ class NotificationTemplateTagTest(TestCase):
 
         for x in range(10):
             notify.send(User, recipient=self.user, actor=actor,
-                        verb='followed you', nf_type='followed_you')
+                        verb='followed you', nf_type='followed_you_%s' % x)
 
         factory = RequestFactory()
         self.request = factory.get('/foobar/')
 
     def test_render_template_tag(self):
-        notify.send(User, recipient=self.user,
-                    actor_text='Joe', verb='followed you')
         nf_list = Notification.objects.filter(recipient=self.user).active()
         rendered = self.RENDER_TEMPLATE.render(
             Context({'notifications': nf_list}))
         self.assertIn('followed you', rendered)
 
     def test_render_template_tag_for_box(self):
-        notify.send(User, recipient=self.user,
-                    actor_text='Joe', verb='followed you')
         nf_list = Notification.objects.filter(recipient=self.user).active()
         rendered = self.RENDER_TEMPLATE_FOR_BOX.render(
             Context({'notifications': nf_list}))
@@ -649,4 +795,4 @@ class NotificationTemplateTagTest(TestCase):
         rendered = self.USER_NOTIFICATIONS.render(RequestContext(self.request))
         self.assertNotIn('followed you', rendered)
 
-# TODO: Write test for test-worthy methods.
+# # TODO: Write test for test-worthy methods.
