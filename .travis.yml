@@ -15,4 +15,4 @@ script:
 branches:
     only:
         - master
-        - dev
+        - nf_concat_support
