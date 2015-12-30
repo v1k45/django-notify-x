@@ -1,5 +1,5 @@
 {% load i18n %}
-<li data-nf-id="{{ notification.id }}" id="nf-{{ notification.id }}" class="notification list-group-item {{ notification.read|yesno:'read,unread' }}">
+<li data-nf-flag="{{ notification.flag }}" id="nf-{{ notification.id }}" class="notification list-group-item {{ notification.read|yesno:'read,unread' }}">
 {% block notification %}
     {% if notification.target %}
         {% blocktrans with actor_url=notification.actor_url actor=notification.actor verb=notification.verb target=notification.target target_url=notification.target_url%}
