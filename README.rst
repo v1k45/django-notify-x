@@ -126,7 +126,7 @@ Notification concatenation support
 Notification Concatenation is what you see when you read notifications like **Bob and 64 others liked your status**. A developmental support is available for it, but it only supports Django 1.8.X on Python3 for now. The support will be extended as soon as ``django-gm2m`` adds supports for 1.9.
 
 If you use 1.8.X on Python3, you can add this feature to your application.
-Please read instructions on `nf_concat_support <https://github.com/v1k45/django-notify-x/tree/nf_concat_support>__` branch.
+Please read instructions on `nf_concat_support <https://github.com/v1k45/django-notify-x/tree/nf_concat_support>`__ branch.
 
 Notification Template tags
 ==========================
