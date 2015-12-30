@@ -1,10 +1,10 @@
 include AUTHORS.rst
-incude CHANGELOG.rst
+include CHANGELOG.rst
 include LICENSE
 include README.rst
 include tox.ini
 include requirements.txt
 include test_requirements.txt
 include runtests.py
-recursive-include notify/locale *
+recursive-include notify *.py *.html *.txt *.po *.mo *.js
 global-exclude *.orig *.pyc *.log *.swp local_settings.py
