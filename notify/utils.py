@@ -1,4 +1,5 @@
 from django.template.loader import render_to_string
+from django.utils.timezone import datetime, make_aware, is_naive
 
 
 def render_notification(notification, render_target='page', **extra):
@@ -16,3 +17,11 @@ def render_notification(notification, render_target='page', **extra):
     ]
 
     return render_to_string(templates, nf_ctx)
+
+
+def to_timestamp(dt):
+    epoch = datetime(1970, 1, 1)
+    if is_naive(dt):
+        dt = make_aware(dt)
+    td = dt - make_aware(epoch)
+    return td.total_seconds()
