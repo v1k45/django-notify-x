@@ -9,7 +9,7 @@ django-notify-x: quick guide
 .. image:: https://badge.fury.io/py/django-notify-x.svg
    :target: https://badge.fury.io/py/django-notify-x
 
-.. image:: https://travis-ci.org/v1k45/django-notify-x.svg?branch=nf_concat_dev
+.. image:: https://travis-ci.org/v1k45/django-notify-x.svg?branch=nf_concat_support
    :target: https://travis-ci.org/v1k45/django-notify-x
 
 
