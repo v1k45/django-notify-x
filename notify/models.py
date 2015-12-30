@@ -8,6 +8,8 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.html import escape
 from django.utils.timesince import timesince
 from django.utils.translation import ugettext_lazy as _
+from gm2m.fields import GM2MField
+from .utils import to_timestamp
 
 
 class NotificationQueryset(QuerySet):
@@ -123,12 +125,6 @@ class Notification(models.Model):
         :verb:          Action performed by actor (not necessarily).
         :description:   Option description for your notification.
 
-        :actor_text:    Anonymous actor who is not in content-type.
-        :actor_url:     Since the actor is not in content-type,
-                        a custom URL for it.
-
-        *...Same for target and obj*.
-
         :nf_type:   | Each notification is different, they must be formatted
                     | differently during HTML rendering. For this, each
                     | notification gets to carry it own *notification type*.
@@ -167,25 +163,8 @@ class Notification(models.Model):
                                   verbose_name=_('Notification receiver'))
 
     # actor attributes.
-    actor_content_type = models.ForeignKey(
-        ContentType, null=True, blank=True,
-        related_name='notify_actor', on_delete=models.CASCADE,
-        verbose_name=_('Content type of actor object'))
 
-    actor_object_id = models.PositiveIntegerField(
-        null=True, blank=True,
-        verbose_name=_('ID of the actor object'))
-
-    actor_content_object = GenericForeignKey('actor_content_type',
-                                             'actor_object_id')
-
-    actor_text = models.CharField(
-        max_length=50, blank=True, null=True,
-        verbose_name=_('Anonymous text for actor'))
-
-    actor_url_text = models.URLField(
-        blank=True, null=True,
-        verbose_name=_('Anonymous URL for actor'))
+    actors = GM2MField()
 
     # basic details.
     verb = models.CharField(max_length=50,
@@ -213,14 +192,6 @@ class Notification(models.Model):
     target_content_object = GenericForeignKey('target_content_type',
                                               'target_object_id')
 
-    target_text = models.CharField(
-        max_length=50, blank=True, null=True,
-        verbose_name=_('Anonymous text for target'))
-
-    target_url_text = models.URLField(
-        blank=True, null=True,
-        verbose_name=_('Anonymous URL for target'))
-
     # obj attributes.
     obj_content_type = models.ForeignKey(
         ContentType, null=True, blank=True,
@@ -233,19 +204,14 @@ class Notification(models.Model):
 
     obj_content_object = GenericForeignKey('obj_content_type', 'obj_object_id')
 
-    obj_text = models.CharField(
-        max_length=50, blank=True, null=True,
-        verbose_name=_('Anonymous text for action object'))
-
-    obj_url_text = models.URLField(
-        blank=True, null=True,
-        verbose_name=_('Anonymous URL for action object'))
-
     extra = JSONField(null=True, blank=True,
                       verbose_name=_('JSONField to store addtional data'))
 
     # Advanced details.
     created = models.DateTimeField(auto_now=False, auto_now_add=True)
+
+    modified = models.DateTimeField(auto_now=True)
+
     read = models.BooleanField(default=False,
                                verbose_name=_('Read status'))
     deleted = models.BooleanField(default=False,
@@ -255,25 +221,6 @@ class Notification(models.Model):
 
     class Meta(object):
         ordering = ('-created', )
-
-    def __str__(self):
-        ctx = {
-            'actor': self.actor or self.actor_text,
-            'verb': self.verb,
-            'description': self.description,
-            'target': self.target or self.target_text,
-            'obj': self.obj or self.obj_text,
-            'at': timesince(self.created),
-        }
-
-        if ctx['actor']:
-            if not ctx['target']:
-                return _("{actor} {verb} {at} ago").format(**ctx)
-            elif not ctx['obj']:
-                return _("{actor} {verb} on {target} {at} ago").format(**ctx)
-            elif ctx['obj']:
-                return _("{actor} {verb} {obj} on {target} {at} ago").format(**ctx)
-        return _("{description} -- {at} ago").format(**ctx)
 
     def mark_as_read(self):
         """
@@ -291,12 +238,15 @@ class Notification(models.Model):
 
     @property
     def actor(self):
-        """
-        Property to return actor object/text to keep things DRY.
-
-        :return: Actor object or Text or None.
-        """
-        return self.actor_content_object or self.actor_text
+        actor_count = self.actors.all().count()
+        if actor_count <= 2:
+            actor_list = [str(actor) for actor in self.actors.all()]
+            actor_val = ' and '.join(actor_list)
+        else:
+            actor_first = self.actors.all().first()
+            actor_val = "{0} and {1} others".format(actor_first,
+                                                    actor_count - 1)
+        return actor_val
 
     @property
     def actor_url(self):
@@ -312,7 +262,7 @@ class Notification(models.Model):
         try:
             url = self.actor_content_object.get_absolute_url()
         except AttributeError:
-            url = self.actor_url_text or "#"
+            url = "#"
         return url
 
     @property
@@ -322,7 +272,7 @@ class Notification(models.Model):
 
         :return: Target object or Text or None
         """
-        return self.target_content_object or self.target_text
+        return self.target_content_object
 
     @property
     def target_url(self):
@@ -334,7 +284,7 @@ class Notification(models.Model):
         try:
             url = self.target_content_object.get_absolute_url()
         except AttributeError:
-            url = self.target_url_text or "#"
+            url = "#"
         return url
 
     @property
@@ -344,7 +294,7 @@ class Notification(models.Model):
 
         :return: Action Object or Text or None.
         """
-        return self.obj_content_object or self.obj_text
+        return self.obj_content_object
 
     @property
     def obj_url(self):
@@ -356,8 +306,12 @@ class Notification(models.Model):
         try:
             url = self.obj_content_object.get_absolute_url()
         except AttributeError:
-            url = self.obj_url_text or "#"
+            url = "#"
         return url
+
+    @property
+    def flag(self):
+        return to_timestamp(self.modified)
 
     @staticmethod
     def do_escape(obj):
@@ -372,6 +326,25 @@ class Notification(models.Model):
         """
         return escape(str(obj)) if obj else None
 
+    def __str__(self):
+        ctx = {
+            'actor': self.actor,
+            'verb': self.verb,
+            'description': self.description,
+            'target': self.target,
+            'obj': self.obj,
+            'at': timesince(self.created),
+        }
+
+        if ctx['actor']:
+            if not ctx['target']:
+                return _("{actor} {verb} {at} ago").format(**ctx)
+            elif not ctx['obj']:
+                return _("{actor} {verb} on {target} {at} ago").format(**ctx)
+            elif ctx['obj']:
+                return _("{actor} {verb} {obj} on {target} {at} ago").format(**ctx)
+        return _("{description} -- {at} ago").format(**ctx)
+
     def as_json(self):
         """
         Notification data in a Python dictionary to which later gets
@@ -383,9 +356,7 @@ class Notification(models.Model):
         data = {
             "id": self.id,
             "actor": self.do_escape(self.actor),
-            "actor_url": self.do_escape(self.actor_url),
             "verb": self.do_escape(self.verb),
-            "description": self.do_escape(self.description),
             "read": self.read,
             "nf_type": self.do_escape(self.nf_type),
             "target": self.do_escape(self.target),
@@ -393,6 +364,7 @@ class Notification(models.Model):
             "obj": self.do_escape(self.obj),
             "obj_url": self.do_escape(self.obj_url),
             "created": self.created,
-            "data": self.extra,
+            "updated": self.modified,
+            "flag": self.flag,
         }
         return data
