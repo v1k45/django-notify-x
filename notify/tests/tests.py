@@ -620,7 +620,7 @@ class NotificationTemplateTagTest(TestCase):
         self.assertIn('followed you', rendered)
 
     def test_render_template_tag_with_empty_notifications(self):
-        nf_list = Notification.objects.filter(recipient=self.user).active()
+        nf_list = Notification.objects.filter(recipient=self.user).none()
         rendered = self.RENDER_TEMPLATE.render(
             Context({'notifications': nf_list}))
         self.assertIn('No notifications yet', rendered)
