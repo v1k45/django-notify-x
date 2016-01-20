@@ -49,7 +49,7 @@ class RenderNotificationsNode(template.Node):
             extra = nf.as_json() if self.target == 'box' else {}
             html = render_notification(nf, render_target=self.target, **extra)
             html_chunks.append(html)
-        else:
+        if not html_chunks:
             html_chunks.append(_("<b>No notifications yet.</b>"))
         html_string = '\n'.join(html_chunks)
         return html_string
