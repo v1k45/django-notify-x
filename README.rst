@@ -144,16 +144,14 @@ IMPORTANT
 =========
 - This app works exactly the same as the stable version, the only differences are version support.
 
-- **Currently, this app only supports Django 1.8.x on Python3.**. Support for Python2.7 will be soon added.
-
-- This app uses *tkhyn*'s `django-gm2m <https://bitbucket.org/tkhyn/django-gm2m>`__. For some reasons, ``gm2m`` has no support for django 1.9 as of now. This is why there is no support for versions above 1.8 in django-notify-x.
+- **Currently, this app only supports Python3.**. Support for Python2.7 will be soon added.
 
 - The tests for python27 are failing only for few methods, they'll be resolved ASAP :)
 
 TODO List
 =========
 
-- Support python27 and django19
+- Support python27
 - Convert *Function based views* to *Class Based views*.
 
 .. _django-notifications: https://www.github.com/django-notifications/django-notifications/
