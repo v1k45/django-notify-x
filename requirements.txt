@@ -1,4 +1,4 @@
 django>=1.8
 django-jsonfield
-django-gm2m
+django-gm2m==0.4
 django-fake-model
