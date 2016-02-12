@@ -239,6 +239,7 @@ class NotificationTest(TestCase):
                     actor=self.actor1, verb='also commented')
 
         nfs = Notification.objects.all()
+        nfs.read_all()
         self.assertEqual(nfs.count(), 20)
         first_nf = nfs.first()
         self.assertEqual(first_nf.actors.all().count(), 1)
@@ -263,6 +264,7 @@ class NotificationTest(TestCase):
 
         nfs_new = Notification.objects.all()
         self.assertEqual(nfs_new.count(), 30)
+        self.assertEqual(nfs_new.unread().count(), 30)
 
     def test_multiple_notify_with_hybrid_set_of_recipient_list_no_target(self):
 
@@ -277,6 +279,7 @@ class NotificationTest(TestCase):
                     verb='also commented')
 
         nfs = Notification.objects.all()
+        nfs.read_all()
         self.assertEqual(nfs.count(), 20)
         first_nf = nfs.first()
         self.assertEqual(first_nf.actors.all().count(), 1)
@@ -301,6 +304,7 @@ class NotificationTest(TestCase):
 
         nfs_new = Notification.objects.all()
         self.assertEqual(nfs_new.count(), 30)
+        self.assertEqual(nfs_new.unread().count(), 30)
 
 
 @Entry.fake_me
