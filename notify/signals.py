@@ -106,11 +106,13 @@ def notifier(**kwargs):
 
         # All Notifications of the supplied type
         # basically old nfs + newly created nfs
-        nf_id_list_updated = Notification.objects.filter(
+        nf_list_updated = Notification.objects.filter(
             recipient_id__in=recipient_id_list,
             target_content_type=target_ct,
             target_object_id=target_pk,
-            nf_type=nf_type).values_list('id', flat=True)
+            nf_type=nf_type)
+
+        nf_id_list_updated = nf_list_updated.values_list('id', flat=True)
 
         # ``gm2m_src_id`` stands for notification id
         # same thing a above, extracting notifications which have
@@ -140,3 +142,6 @@ def notifier(**kwargs):
 
         # Add new actors in bulk, save queries :)
         Notification.actors.through.objects.bulk_create(new_actors)
+
+        # marking all notifications as unread
+        nf_list_updated.unread_all()
