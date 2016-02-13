@@ -1,5 +1,5 @@
 /**
- * Created by vikas on 6/12/15.
+ * django-notify-x.
  */
 
 // Variable declaration;
@@ -159,7 +159,7 @@ $(document).ready(function () {
 // Update a notification using AJAX.
 $(document).ready(function updateNotifications() {
     var $notification_box = $(nfBoxListClassSelector);
-    var flag = $notification_box.children().first().attr('data-nf-id');
+    var flag = $notification_box.children().first().attr('data-nf-id') || '1';
 
     if (!flag || $notification_box.length == 0) {
         console.log('Notity improperly configured. No data-nf-id was found.')

@@ -229,33 +229,29 @@ def notification_update(request):
     last_notification = int(flag) if flag.isdigit() else None
 
     if last_notification:
-        try:
-            notification = Notification.objects.get(pk=last_notification,
-                                                    recipient=request.user)
-            new_notifications = request.user.notifications.filter(
-                id__gt=notification.id).active()
 
-            msg = _("Notifications successfully retrieved.") \
-                if new_notifications else _("No new notifications.")
-            notification_list = []
-            for nf in new_notifications:
-                notification = nf.as_json()
-                notification_list.append(notification)
-                notification['html'] = render_notification(
-                    nf, render_target='box', **notification)
+        new_notifications = request.user.notifications.filter(
+            id__gt=last_notification).active()
 
-            ctx = {
-                "retrieved": len(new_notifications),
-                "unread_count": request.user.notifications.unread().count(),
-                "notifications": notification_list,
-                "success": True,
-                "msg": msg,
-            }
+        msg = _("Notifications successfully retrieved.") \
+            if new_notifications else _("No new notifications.")
+        notification_list = []
+        for nf in new_notifications:
+            notification = nf.as_json()
+            notification_list.append(notification)
+            notification['html'] = render_notification(
+                nf, render_target='box', **notification)
 
-            return JsonResponse(ctx)
+        ctx = {
+            "retrieved": len(new_notifications),
+            "unread_count": request.user.notifications.unread().count(),
+            "notifications": notification_list,
+            "success": True,
+            "msg": msg,
+        }
 
-        except Notification.DoesNotExist:
-            msg = _("Invalid notification flag")
+        return JsonResponse(ctx)
+
     else:
         msg = _("Notification flag not sent.")
 
@@ -268,6 +264,10 @@ def read_and_redirect(request, notification_id):
     """
     Marks the supplied notification as read and then redirects
     to the supplied URL from the ``next`` URL parameter.
+
+    **IMPORTANT**: This is CSRF - unsafe method.
+    Only use it if its okay for you to mark notifications \
+    as read without a robust check.
 
     :param request: HTTP request context.
     :param notification_id: ID of the notification to be marked a read.
