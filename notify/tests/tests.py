@@ -492,13 +492,16 @@ class NotificationViewTest(TestCase):
         self.assertFalse(resp['success'])
 
         # A notification that does not exists
+        # according to behavior described in #18, request should be successfu;
+        # even if the notification ID doesn't exists/ belongs to the user.
         url2 = "{}?flag=123456789".format(reverse('notifications:update'))
         response2 = self.client.get(url2)
 
         self.assertEqual(response2.status_code, 200)
         resp2 = json.loads(response2.content.decode('utf-8'))
 
-        self.assertFalse(resp2['success'])
+        # request is still successful
+        self.assertTrue(resp2['success'])
 
     def test_read_and_redirect(self):
         """
