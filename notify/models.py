@@ -9,6 +9,8 @@ from django.utils.html import escape
 from django.utils.timesince import timesince
 from django.utils.translation import ugettext_lazy as _
 
+from .utils import prefetch_relations
+
 
 class NotificationQueryset(QuerySet):
 
@@ -23,7 +25,7 @@ class NotificationQueryset(QuerySet):
 
         :return: Non soft-deleted notifications.
         """
-        return self.filter(deleted=False)
+        return prefetch_relations(self.filter(deleted=False))
 
     def read(self):
         """
@@ -31,7 +33,7 @@ class NotificationQueryset(QuerySet):
 
         :return: Read and active Notifications filter().
         """
-        return self.filter(deleted=False, read=True)
+        return prefetch_relations(self.filter(deleted=False, read=True))
 
     def unread(self):
         """
@@ -39,7 +41,7 @@ class NotificationQueryset(QuerySet):
 
         :return: Unread and active Notifications filter().
         """
-        return self.filter(deleted=False, read=False)
+        return prefetch_relations(self.filter(deleted=False, read=False))
 
     def unread_all(self, user=None):
         """
@@ -105,7 +107,7 @@ class NotificationQueryset(QuerySet):
 
         :return: Soft deleted notification filter()
         """
-        return self.filter(deleted=True)
+        return prefetch_relations(self.filter(deleted=True))
 
 
 @python_2_unicode_compatible
