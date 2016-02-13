@@ -1,6 +1,15 @@
 Changelog
 =========
 
+- Version 0.1.4
+    - Generic relations are prefetched by default, saves queries ridiculously!
+    - Bug fixes in template tag and notification update view.
+
+- Version 0.1.3
+    - Included the static files and templates were missing from PyPI package.
+    - Added a view to mark notification as read and redirect to the target url.
+    - Added info about concatenation support; fixed minor typos
+
 - Version 0.1.2
     - Fernando added translation support for ``pt_BR``.
     - Bug fixes in the javascript file.
