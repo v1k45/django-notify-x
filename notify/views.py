@@ -226,6 +226,7 @@ def notification_update(request):
     :return: Notification updates (if any) in JSON format.
     """
     flag = request.GET.get('flag', None)
+    target = request.GET.get('target', 'box')
     last_notification = int(flag) if flag.isdigit() else None
 
     if last_notification:
@@ -240,7 +241,7 @@ def notification_update(request):
             notification = nf.as_json()
             notification_list.append(notification)
             notification['html'] = render_notification(
-                nf, render_target='box', **notification)
+                nf, render_target=target, **notification)
 
         ctx = {
             "retrieved": len(new_notifications),

@@ -34,7 +34,7 @@ class RenderNotificationsNode(template.Node):
                 _("{tag} takes 2 or 3 arguments, {len} given.").format(
                     tag=tokens[0], len=len(tokens)))
 
-    def __init__(self, obj, target='page'):
+    def __init__(self, obj, target=''):
         self.obj = obj
         self.target = target
 
