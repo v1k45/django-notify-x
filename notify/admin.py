@@ -8,6 +8,7 @@ class NotificationAdmin(admin.ModelAdmin):
                     'obj', 'target', 'read', 'deleted')
     list_filter = ('read', 'deleted', 'nf_type', 'created')
     search_fields = ('recipient__username', 'verb', 'description')
+    raw_id_fields = ('recipient', )
 
     fieldsets = (
             ('Basic details',
