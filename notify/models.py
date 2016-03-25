@@ -186,8 +186,8 @@ class Notification(models.Model):
         max_length=50, blank=True, null=True,
         verbose_name=_('Anonymous text for actor'))
 
-    actor_url_text = models.URLField(
-        blank=True, null=True,
+    actor_url_text = models.CharField(
+        blank=True, null=True, max_length=200,
         verbose_name=_('Anonymous URL for actor'))
 
     # basic details.
@@ -220,8 +220,8 @@ class Notification(models.Model):
         max_length=50, blank=True, null=True,
         verbose_name=_('Anonymous text for target'))
 
-    target_url_text = models.URLField(
-        blank=True, null=True,
+    target_url_text = models.CharField(
+        blank=True, null=True, max_length=200,
         verbose_name=_('Anonymous URL for target'))
 
     # obj attributes.
@@ -240,8 +240,8 @@ class Notification(models.Model):
         max_length=50, blank=True, null=True,
         verbose_name=_('Anonymous text for action object'))
 
-    obj_url_text = models.URLField(
-        blank=True, null=True,
+    obj_url_text = models.CharField(
+        blank=True, null=True, max_length=200,
         verbose_name=_('Anonymous URL for action object'))
 
     extra = JSONField(null=True, blank=True,
