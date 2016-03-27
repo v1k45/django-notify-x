@@ -63,7 +63,7 @@ def notifier(sender, **kwargs):
             target_content_object=target, target_text=target_text,
             target_url_text=target_url,
 
-            obj_content_object=obj, obj_text=obj_text, obj_url=obj_url,
+            obj_content_object=obj, obj_text=obj_text, obj_url_text=obj_url,
             extra=extra
         )
         saved_notification = notification.save()
