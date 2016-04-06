@@ -88,7 +88,7 @@ def prefetch_relations(weak_queryset):
         for gfk_name, gfk_field in gfks.items():
             related_content_type_id = getattr(
                 weak_model,
-                gfk_field.model._meta.get_field_by_name(gfk_field.ct_field)[0].get_attname())
+                gfk_field.model._meta.get_field(gfk_field.ct_field).get_attname())
             if not related_content_type_id:
                 continue
             related_content_type = ContentType.objects.get_for_id(related_content_type_id)
@@ -106,7 +106,7 @@ def prefetch_relations(weak_queryset):
                 for gfk_name, gfk_field in gfks.items():
                     related_content_type_id = getattr(
                         weak_model,
-                        gfk_field.model._meta.get_field_by_name(gfk_field.ct_field)[0].get_attname())
+                        gfk_field.model._meta.get_field(gfk_field.ct_field).get_attname())
                     if not related_content_type_id:
                         continue
                     related_content_type = ContentType.objects.get_for_id(related_content_type_id)
