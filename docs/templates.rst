@@ -154,6 +154,22 @@ render_notifications
 
     The ``request.user.notifications.active`` is just used to show an example of notification queryset, you can use any other way to supply a QuerySet of your choice.
 
+    As each notification has many generic relations (actor, target, object),
+    and the Django's default behavior when evaluating queries is to hit the
+    database once per relation per record, the amount of queries to render many
+    notifications can grow quickly. To handle this case, the ``Notification``
+    queryset has a method ``prefetch``, that prefetches the relations and
+    reduces the number of queries needed to ``N+Y``, where ``N`` is the number
+    of notifications on the master queryset, and ``Y`` is the number of
+    distinct models that your notifications refers to.
+
+    Use ``prefetch`` as the last queryset method in the chain, as it will
+    evaluate the queryset and prefetch all generic relations::
+
+        {% load notification_tags %}
+        {% render_notifications using request.user.notifications.active.prefetch %}
+
+
 include_notify_js_variables
 ---------------------------
 

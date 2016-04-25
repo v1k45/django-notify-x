@@ -20,6 +20,12 @@ class NotificationQueryset(QuerySet):
     Chain-able QuerySets using ```.as_manager()``.
     """
 
+    def prefetch(self):
+        """
+        Evaluates the current queryset and prefetches all generic relations.
+        """
+        return prefetch_relations(self)
+
     def active(self):
         """
         QuerySet filter() for retrieving both read and unread notifications
@@ -27,7 +33,7 @@ class NotificationQueryset(QuerySet):
 
         :return: Non soft-deleted notifications.
         """
-        return prefetch_relations(self.filter(deleted=False))
+        return self.filter(deleted=False)
 
     def read(self):
         """
@@ -35,7 +41,7 @@ class NotificationQueryset(QuerySet):
 
         :return: Read and active Notifications filter().
         """
-        return prefetch_relations(self.filter(deleted=False, read=True))
+        return self.filter(deleted=False, read=True)
 
     def unread(self):
         """
@@ -43,7 +49,7 @@ class NotificationQueryset(QuerySet):
 
         :return: Unread and active Notifications filter().
         """
-        return prefetch_relations(self.filter(deleted=False, read=False))
+        return self.filter(deleted=False, read=False)
 
     def unread_all(self, user=None):
         """
@@ -109,7 +115,7 @@ class NotificationQueryset(QuerySet):
 
         :return: Soft deleted notification filter()
         """
-        return prefetch_relations(self.filter(deleted=True))
+        return self.filter(deleted=True)
 
 
 @python_2_unicode_compatible
