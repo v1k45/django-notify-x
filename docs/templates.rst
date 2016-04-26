@@ -61,8 +61,9 @@ For full page notifications, we'll try to find a template in the following order
 For live ajax notifications, we'll try to find a template in the following order::
 
     followed_user_box.html
-    followed_user.html
     default_box.html
+    followed_user.html
+    defaul.html
 
 
 **Contents of `notifications/includes/followed_user.html`**::
