@@ -22,9 +22,26 @@ class NotificationQueryset(QuerySet):
 
     def prefetch(self):
         """
-        Evaluates the current queryset and prefetches all generic relations.
+        Marks the current queryset to prefetch all generic relations.
         """
-        return prefetch_relations(self)
+        qs = self.select_related()
+        qs._prefetch_relations = True
+        return qs
+
+    def _fetch_all(self):
+        if self._result_cache is None:
+            if hasattr(self, '_prefetch_relations'):
+                # removes the flag since prefetch_relations is recursive
+                del self._prefetch_relations
+                prefetch_relations(self)
+                self._prefetch_relations = True
+        return super(NotificationQueryset, self)._fetch_all()
+
+    def _clone(self, **kwargs):
+        clone = super(NotificationQueryset, self)._clone(**kwargs)
+        if hasattr(self, '_prefetch_relations'):
+            clone._prefetch_relations = True
+        return clone
 
     def active(self):
         """

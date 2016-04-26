@@ -163,8 +163,7 @@ render_notifications
     of notifications on the master queryset, and ``Y`` is the number of
     distinct models that your notifications refers to.
 
-    Use ``prefetch`` as the last queryset method in the chain, as it will
-    evaluate the queryset and prefetch all generic relations::
+    Use ``prefetch`` to redure the number of queries::
 
         {% load notification_tags %}
         {% render_notifications using request.user.notifications.active.prefetch %}
