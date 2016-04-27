@@ -146,7 +146,7 @@ class UserNotification(RenderNotificationsNode):
             request = context['request']
             user = request.user
             if user.is_authenticated():
-                notifications = user.notifications.active()
+                notifications = user.notifications.active().prefetch()
                 return self.generate_html(notifications)
         return ''
 

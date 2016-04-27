@@ -73,8 +73,6 @@ def prefetch_relations(weak_queryset):
     from django.contrib.contenttypes.models import ContentType
     from django.contrib.contenttypes.fields import GenericForeignKey
 
-    weak_queryset = weak_queryset.select_related()
-
     # reverse model's generic foreign keys into a dict:
     # { 'field_name': generic.GenericForeignKey instance, ... }
     gfks = {}
@@ -100,7 +98,7 @@ def prefetch_relations(weak_queryset):
 
     for content_type, object_ids in data.items():
         model_class = content_type.model_class()
-        models = prefetch_relations(model_class.objects.filter(pk__in=object_ids))
+        models = prefetch_relations(model_class.objects.filter(pk__in=object_ids).select_related())
         for model in models:
             for weak_model in weak_queryset:
                 for gfk_name, gfk_field in gfks.items():

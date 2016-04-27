@@ -20,6 +20,29 @@ class NotificationQueryset(QuerySet):
     Chain-able QuerySets using ```.as_manager()``.
     """
 
+    def prefetch(self):
+        """
+        Marks the current queryset to prefetch all generic relations.
+        """
+        qs = self.select_related()
+        qs._prefetch_relations = True
+        return qs
+
+    def _fetch_all(self):
+        if self._result_cache is None:
+            if hasattr(self, '_prefetch_relations'):
+                # removes the flag since prefetch_relations is recursive
+                del self._prefetch_relations
+                prefetch_relations(self)
+                self._prefetch_relations = True
+        return super(NotificationQueryset, self)._fetch_all()
+
+    def _clone(self, **kwargs):
+        clone = super(NotificationQueryset, self)._clone(**kwargs)
+        if hasattr(self, '_prefetch_relations'):
+            clone._prefetch_relations = True
+        return clone
+
     def active(self):
         """
         QuerySet filter() for retrieving both read and unread notifications
@@ -27,7 +50,7 @@ class NotificationQueryset(QuerySet):
 
         :return: Non soft-deleted notifications.
         """
-        return prefetch_relations(self.filter(deleted=False))
+        return self.filter(deleted=False)
 
     def read(self):
         """
@@ -35,7 +58,7 @@ class NotificationQueryset(QuerySet):
 
         :return: Read and active Notifications filter().
         """
-        return prefetch_relations(self.filter(deleted=False, read=True))
+        return self.filter(deleted=False, read=True)
 
     def unread(self):
         """
@@ -43,7 +66,7 @@ class NotificationQueryset(QuerySet):
 
         :return: Unread and active Notifications filter().
         """
-        return prefetch_relations(self.filter(deleted=False, read=False))
+        return self.filter(deleted=False, read=False)
 
     def unread_all(self, user=None):
         """
@@ -109,7 +132,7 @@ class NotificationQueryset(QuerySet):
 
         :return: Soft deleted notification filter()
         """
-        return prefetch_relations(self.filter(deleted=True))
+        return self.filter(deleted=True)
 
 
 @python_2_unicode_compatible

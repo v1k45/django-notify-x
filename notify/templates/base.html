@@ -73,7 +73,7 @@
                                  style="position:relative; width: 100%; overflow: hidden;  min-width: 300px;">
                                 <div class="notificationContent" style="overflow-y: scroll; height: 100%;">
                                     <ul class="notification-box-list" style="margin:0; padding:0;list-style-type: none;">
-                                        {% render_notifications using user.notifications.active for box %}
+                                        {% render_notifications using user.notifications.active.prefetch for box %}
                                         <li style="background-color: #ddd; padding: 5px; text-align: center;">
                                             <a href="#" style="color: black;">All Notifications</a>
                                         </li>

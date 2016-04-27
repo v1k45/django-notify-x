@@ -47,7 +47,7 @@ def notifications(request):
 
     :return: Rendered notification list page.
     """
-    notification_list = request.user.notifications.active()
+    notification_list = request.user.notifications.active().prefetch()
     return render(request, 'notifications/all.html',
                   {'notifications': notification_list})
 
@@ -232,7 +232,7 @@ def notification_update(request):
     if last_notification:
 
         new_notifications = request.user.notifications.filter(
-            id__gt=last_notification).active()
+            id__gt=last_notification).active().prefetch()
 
         msg = _("Notifications successfully retrieved.") \
             if new_notifications else _("No new notifications.")
