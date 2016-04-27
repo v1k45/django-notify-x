@@ -11,8 +11,9 @@ def render_notification(notification, render_target='', **extra):
     suffix = '_{}'.format(render_target) if render_target and render_target != 'page' else ''
     templates = [
         "{0}{1}{2}.html".format(template_dir, template_name, suffix),
-        "{0}{1}.html".format(template_dir, template_name),
         "{0}default{1}.html".format(template_dir, suffix),
+        "{0}{1}.html".format(template_dir, template_name),
+        "{0}default.html".format(template_dir),
     ]
 
     return render_to_string(templates, nf_ctx)

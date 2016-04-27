@@ -56,13 +56,14 @@ Put those files in ``notifications/includes/`` directory of your template direct
 For full page notifications, we'll try to find a template in the following order::
 
     followed_user.html
-    defaul.html
+    default.html
 
 For live ajax notifications, we'll try to find a template in the following order::
 
     followed_user_box.html
-    followed_user.html
     default_box.html
+    followed_user.html
+    default.html
 
 
 **Contents of `notifications/includes/followed_user.html`**::
