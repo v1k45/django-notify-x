@@ -1,6 +1,11 @@
 Changelog
 =========
 
+- Version 0.1.6
+    - ``prefetch_relations`` can now be used as a queryset method.
+    - More clear target precedence.
+    - Updated on 29th April 2016
+
 - Version 0.1.5
     - Custom rendering targets for notifications
     - ``raw_id_fields`` on admin for large user count 
