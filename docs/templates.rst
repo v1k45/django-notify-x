@@ -164,7 +164,7 @@ render_notifications
     of notifications on the master queryset, and ``Y`` is the number of
     distinct models that your notifications refers to.
 
-    Use ``prefetch`` to redure the number of queries::
+    Use ``prefetch`` to reduce the number of queries::
 
         {% load notification_tags %}
         {% render_notifications using request.user.notifications.active.prefetch %}
@@ -190,7 +190,6 @@ include_notify_js_variables
     All of them are nothing but javascript function declarations which are supposed to run when a JQuery AJAX request is successfully completed.
 
     .. note::
-        **Changed in version 0.1.1**
 
         In the previous versions, it was necessarty to add notification check before including the JS variables using the ``include_notify_js_variables`` template tag. It is no more required. The new update checks for authenticated users and then renders the tempalte if required.
 
@@ -198,7 +197,6 @@ user_notifications
 ------------------
 
     .. note::
-        **Added in version 0.1.1**
 
         The ``user_notifications`` tag is a shortcut to the ``render_notifications`` tag. It directly renders the notifications of the logged-in user on the specified target.
 
