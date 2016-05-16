@@ -54,10 +54,9 @@ After the you've installed ``django-notify-x`` in your python enviroment. You ha
 
 Then an entry on the ``urls.py`` file::
 
-    import notify
 
     urlpatterns = (
-        url(r'^notifications/', include(notify.urls, 'notifications')),
+        url(r'^notifications/', include('notify.urls', 'notifications')),
     )
 
 Then run migrations::

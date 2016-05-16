@@ -23,11 +23,10 @@ Add ``notify`` in ``INSTALLED_APPS`` of your project settings::
 
 Include ``notify.urls`` in your ``urls.py`` with ``notifications`` as namespace::
 
-    import notify
 
     urlpatterns = [
         ...
-        url(r'^notifications/', include(notify.urls, 'notifications')),
+        url(r'^notifications/', include('notify.urls', 'notifications')),
         ...
     ]
 
