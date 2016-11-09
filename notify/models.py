@@ -14,6 +14,11 @@ from django.utils.functional import cached_property
 from .utils import prefetch_relations
 
 
+class Response(object):
+    HTTP_200_OK = "200"
+    HTTP_202_ACCEPTED = "202"
+
+
 class NotificationQueryset(QuerySet):
 
     """
@@ -307,15 +312,21 @@ class Notification(models.Model):
         """
         Marks notification as read
         """
+        if self.read == True:
+            return Response.HTTP_202_ACCEPTED
         self.read = True
         self.save()
+        return Response.HTTP_200_OK
 
     def mark_as_unread(self):
         """
         Marks notification as unread.
         """
+        if self.read == False:
+            return Response.HTTP_202_ACCEPTED
         self.read = False
         self.save()
+        return Response.HTTP_200_OK
 
     @cached_property
     def actor(self):

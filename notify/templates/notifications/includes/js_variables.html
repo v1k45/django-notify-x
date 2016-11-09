@@ -3,16 +3,22 @@
         // Ajax-Notification related callback urls.
         var updateNotificationUrl = "{{ update_notification }}";
         var markNotificationUrl = "{{ mark_notification }}";
+        var markReadNotificationUrl = "{{ mark_read_notification }}";
+        var markUnreadNotificationUrl = "{{ mark_unread_notification }}";
         var markAllNotificationUrl = "{{ mark_all_notification }}";
         var deleteNotificationUrl = "{{ delete_notification }}";
 
         // Jquery class selectors.
         var nfListClassSelector = "{{ nf_list_class_selector }}";
         var nfClassSelector = "{{ nf_class_selector }}";
+        var nfReadOnlyListClassSelector = "{{ nf_read_only_list_class_selector }}";
+        var nfUnreadOnlyListClassSelector = "{{ nf_unread_only_list_class_selector }}";
         var nfBoxListClassSelector = "{{ nf_box_list_class_selector }}";
         var nfBoxClassSelector = "{{ nf_box_class_selector }}";
 
         var markNotificationSelector = "{{ nf_mark_selector }}";
+        var markReadNotificationSelector = "{{ nf_read_mark_selector }}";
+        var markUnreadNotificationSelector = "{{ nf_unread_mark_selector }}";
         var markAllNotificationSelector = "{{ nf_mark_all_selector }}";
         var deleteNotificationSelector = "{{ nf_delete_selector }}";
 
@@ -24,6 +30,8 @@
         //functions to handle ajax success.
         {% include "notifications/includes/update_success.js" %}
         {% include "notifications/includes/mark_success.js" %}
+        {% include "notifications/includes/mark_read_success.js" %}
+        {% include "notifications/includes/mark_unread_success.js" %}
         {% include "notifications/includes/mark_all_success.js" %}
         {% include "notifications/includes/delete_success.js" %}
     </script>

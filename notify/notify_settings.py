@@ -4,6 +4,12 @@ from django.conf import settings
 NF_LIST_CLASS_SELECTOR = getattr(settings, 'NOTIFY_NF_LIST_CLASS_SELECTOR',
                                  '.notifications')
 
+# Class-selector of mark read only notification lists
+NF_READ_ONLY_LIST_CLASS_SELECTOR = getattr(settings, 'NOTIFY_NF_READ_ONLY_LIST_CLASS_SELECTOR', '.read-notifications')
+
+# Class-selector of mark unread only notification lists
+NF_UNREAD_ONLY_LIST_CLASS_SELECTOR = getattr(settings, 'NOTIFY_NF_READ_ONLY_LIST_CLASS_SELECTOR', '.unread-notifications')
+
 # Class-selector for individual notifications.
 SINGLE_NF_CLASS_SELECTOR = getattr(settings, 'NOTIFY_SINGLE_NF_CLASS_SELECTOR',
                                    '.notification')

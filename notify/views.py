@@ -94,6 +94,70 @@ def mark(request):
 
 @login_required
 @require_POST
+def mark_read(request):
+    """
+    Handles marking of individual notifications as read.
+    Takes ``notification id`` as POST data.
+
+    :param request: HTTP request context.
+
+    :returns: Response to mark action of supplied notification ID.
+    """
+    notification_id = request.POST.get('id', None)
+    success = True
+
+    if notification_id:
+        try:
+            notification = Notification.objects.get(pk=notification_id,
+                                                    recipient=request.user)
+            status = notification.mark_as_read()
+            msg = _("Marked as read")
+        except Notification.DoesNotExist:
+            success = False
+            msg = _("Notification does not exists.")
+    else:
+        success = False
+        msg = _("Invalid Notification ID")
+
+    ctx = {'msg': msg, 'success': success, 'status': status}
+
+    return notification_redirect(request, ctx)
+
+
+@login_required
+@require_POST
+def mark_unread(request):
+    """
+    Handles marking of individual notifications as read.
+    Takes ``notification id`` as POST data.
+
+    :param request: HTTP request context.
+
+    :returns: Response to mark action of supplied notification ID.
+    """
+    notification_id = request.POST.get('id', None)
+    success = True
+
+    if notification_id:
+        try:
+            notification = Notification.objects.get(pk=notification_id,
+                                                    recipient=request.user)
+            status = notification.mark_as_unread()
+            msg = _("Marked as unread")
+        except Notification.DoesNotExist:
+            success = False
+            msg = _("Notification does not exists.")
+    else:
+        success = False
+        msg = _("Invalid Notification ID")
+
+    ctx = {'msg': msg, 'success': success, 'status': status}
+
+    return notification_redirect(request, ctx)
+
+
+@login_required
+@require_POST
 def mark_all(request):
     """
     Marks notifications as either read or unread depending of POST parameters.

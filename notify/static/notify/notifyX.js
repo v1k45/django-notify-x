@@ -7,11 +7,15 @@
 // AJAX call URLs
 var updateNotificationUrl;
 var markNotificationUrl;
+var markReadNotificationUrl;
+var markUnreadNotificationUrl;
 var markAllNotificationUrl;
 var deleteNotificationUrl;
 
 // Class selectors
 var nfListClassSelector;
+var nfReadOnlyListClassSelector;
+var nfUnreadOnlyListClassSelector;
 var nfClassSelector;
 var nfBoxListClassSelector;
 var nfBoxClassSelector;
@@ -19,6 +23,8 @@ var nfListSelector = nfBoxListClassSelector + ", " + nfListClassSelector;
 var nfSelector = nfClassSelector + ", " + nfBoxClassSelector;
 
 var markNotificationSelector;
+var markReadNotificationSelector;
+var markUnreadNotificationSelector;
 var markAllNotificationSelector;
 var deleteNotificationSelector;
 
@@ -109,6 +115,52 @@ $(document).ready(function () {
     });
 });
 
+// Mark a notification as read using AJAX.
+$(document).ready(function () {
+    $(nfReadOnlyListClassSelector).delegate(markReadNotificationSelector, 'click', function () {
+
+        var $notification = $(this);
+        var mark_post_data = {
+            id: $notification.attr('data-id'),
+            csrftoken: csrftoken
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: markReadNotificationUrl,
+            data: mark_post_data,
+            success: function (response) {
+                //console.log(response);
+                markReadSuccess(response, $notification);
+            }
+        });
+    });
+});
+
+
+// Mark a notification as unread using AJAX.
+$(document).ready(function () {
+    $(nfUnreadOnlyListClassSelector).delegate(markUnreadNotificationSelector, 'click', function () {
+
+        var $notification = $(this);
+        var mark_post_data = {
+            id: $notification.attr('data-id'),
+            csrftoken: csrftoken
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: markUnreadNotificationUrl,
+            data: mark_post_data,
+            success: function (response) {
+                //console.log(response);
+                markUnreadSuccess(response, $notification);
+            }
+        });
+    });
+});
+
+
 // Mark all notifications as read or unread using AJAX.
 $(document).ready(function () {
     $(markAllNotificationSelector).on('click', function () {
@@ -162,8 +214,8 @@ $(document).ready(function updateNotifications() {
     var flag = $notification_box.children().first().attr('data-nf-id') || '1';
 
     if (!flag || $notification_box.length == 0) {
-        console.log('Notity improperly configured. No data-nf-id was found.')
-        console.log('  Make sure you have a container element with \''+ nfBoxListClassSelector + '\' as css class.');
+        // console.log('Notify box selector improperly configured. No data-nf-id was found.')
+        // console.log('  Make sure you have a container element with \''+ nfBoxListClassSelector + '\' as css class.');
         return;
     }
 
