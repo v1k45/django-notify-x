@@ -6,7 +6,9 @@ All the `views <modules/views.html>`__ of ``django-notify-x`` are compatible wit
 
 Of course, you want things to appear differently for your project, for doing so, you can simply write your own version of the javascript functions and save them in the corresponding templates diretory of app and the things will get overridden easily.
 
-The contents of default javascript fuction-files may seem to be useless, may be they are. But the files are just to give you idea about how things are supposed to work.
+To utilize read-only notifications or unread-only notifications, where the notification status is not toggled but set to read or unread respectively the list selector attribute class needs to be set to ``.read-notifications`` or ``.unread-notifications``. By default the included template will set the ``ul`` element class to ``.notifications`` which results in the toggle of read/unread. You can create your own ``all.html`` template or use javascript to modify the class selector on the client side.
+
+The contents of default javascript function-files may seem to be useless, may be they are. But the files are just to give you idea about how things are supposed to work.
 
 .. seealso::
     You might want to have a look on `Important HTML attributes <templates.html#things-to-take-care-when-writing-notification-templates>`__ of a notification templates. They'll play an important role in AJAX an DOM manipuation of notifications.

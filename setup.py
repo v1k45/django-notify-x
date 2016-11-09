@@ -14,16 +14,16 @@ def read(fname):
         return ''
 
 setup(
-    name="django-notify-x",
+    name="django-notify-x2",
     version=app.__version__,
     description='Notification sytem for Django',
     long_description=read('README.rst'),
     license='The MIT License',
     platforms=['OS Independent'],
-    keywords='django notifications, notify, facebook like notifications',
-    author='Vikas Yadav',
-    author_email='v1k45x@gmail.com',
-    url="https://github.com/v1k45/django-notify-x",
+    keywords='django notifications, notify, facebook like notifications, github like notifications',
+    author='Vikas Yadav, Ryan Castner',
+    author_email='castner.rr@gmail.com',
+    url="https://github.com/audiolion/django-notify-x2",
     packages=find_packages(),
     package_data={'notify': ['static/notify/*js',
                              'templates/*.html',
