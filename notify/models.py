@@ -15,8 +15,10 @@ from .utils import prefetch_relations
 
 
 class Response(object):
-    HTTP_200_OK = "200"
-    HTTP_202_ACCEPTED = "202"
+    HTTP_200_OK = 200
+    HTTP_202_ACCEPTED = 202
+    HTTP_400_BAD_REQUEST = 400
+    HTTP_500_INTERNAL_SERVER_ERROR = 500
 
 
 class NotificationQueryset(QuerySet):
@@ -79,12 +81,20 @@ class NotificationQueryset(QuerySet):
 
         :param user: Notification recipient.
 
-        :return: Updates QuerySet as unread.
+        :return: List of updated notifications with status codes in form [{"status": 200, "id": "5"}, ..]
         """
+        response = []
         qs = self.read()
         if user:
             qs.filter(recipient=user)
-        qs.update(read=False)
+        for notification in qs:
+            if notification.read == False:
+                response.append({'id': notification.id, 'status': Response.HTTP_202_ACCEPTED})
+            else:
+                notification.read = False
+                notification.save()
+                response.append({'id': notification.id, 'status': Response.HTTP_200_OK})
+        return response
 
     def read_all(self, user=None):
         """
@@ -92,12 +102,20 @@ class NotificationQueryset(QuerySet):
 
         :param user: Notification recipient.
 
-        :return: Updates QuerySet as read.
+        :return: List of updated notifications with status codes
         """
+        response = []
         qs = self.unread()
         if user:
             qs.filter(recipient=user)
-        qs.update(read=True)
+        for notification in qs:
+            if notification.read == True:
+                response.append({'id': notification.id, 'status': Response.HTTP_202_ACCEPTED})
+            else:
+                notification.read = True
+                notification.save()
+                response.append({'id': notification.id, 'status': Response.HTTP_200_OK})
+        return response
 
     def delete_all(self, user=None):
         """

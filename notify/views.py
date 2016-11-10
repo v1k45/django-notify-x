@@ -7,7 +7,7 @@ from django.shortcuts import render
 from django.utils.http import is_safe_url
 from django.utils.translation import ugettext as _
 from django.views.decorators.http import require_POST
-from .models import Notification
+from .models import Notification, Response
 from .utils import render_notification
 
 # TODO: Convert function-based views to Class-based views.
@@ -24,7 +24,7 @@ def notification_redirect(request, ctx):
     :returns: Either JSON for AJAX or redirects to the calculated next page.
     """
     if request.is_ajax():
-        return JsonResponse(ctx)
+        return JsonResponse(ctx, status=ctx.get('status', 500))
     else:
         next_page = request.POST.get('next', reverse('notifications:all'))
         if not ctx['success']:
@@ -72,22 +72,25 @@ def mark(request):
             notification = Notification.objects.get(pk=notification_id,
                                                     recipient=request.user)
             if action == 'read':
-                notification.mark_as_read()
+                status = notification.mark_as_read()
                 msg = _("Marked as read")
             elif action == 'unread':
-                notification.mark_as_unread()
+                status = notification.mark_as_unread()
                 msg = _("Marked as unread")
             else:
                 success = False
                 msg = _("Invalid mark action.")
+                status = Response.HTTP_400_BAD_REQUEST
         except Notification.DoesNotExist:
             success = False
             msg = _("Notification does not exists.")
+            status = Response.HTTP_400_BAD_REQUEST
     else:
         success = False
         msg = _("Invalid Notification ID")
+        status = Response.HTTP_400_BAD_REQUEST
 
-    ctx = {'msg': msg, 'success': success, 'action': action}
+    ctx = {'msg': msg, 'success': success, 'action': action, 'status': status}
 
     return notification_redirect(request, ctx)
 
@@ -104,7 +107,7 @@ def mark_read(request):
     :returns: Response to mark action of supplied notification ID.
     """
     notification_id = request.POST.get('id', None)
-    success = True
+    success = False
 
     if notification_id:
         try:
@@ -115,9 +118,11 @@ def mark_read(request):
         except Notification.DoesNotExist:
             success = False
             msg = _("Notification does not exists.")
+            status = Response.HTTP_400_BAD_REQUEST
     else:
         success = False
         msg = _("Invalid Notification ID")
+        status = Response.HTTP_400_BAD_REQUEST
 
     ctx = {'msg': msg, 'success': success, 'status': status}
 
@@ -136,7 +141,7 @@ def mark_unread(request):
     :returns: Response to mark action of supplied notification ID.
     """
     notification_id = request.POST.get('id', None)
-    success = True
+    success = False
 
     if notification_id:
         try:
@@ -147,9 +152,11 @@ def mark_unread(request):
         except Notification.DoesNotExist:
             success = False
             msg = _("Notification does not exists.")
+            status = Response.HTTP_400_BAD_REQUEST
     else:
         success = False
         msg = _("Invalid Notification ID")
+        status = Response.HTTP_400_BAD_REQUEST
 
     ctx = {'msg': msg, 'success': success, 'status': status}
 
@@ -171,16 +178,20 @@ def mark_all(request):
     success = True
 
     if action == 'read':
-        request.user.notifications.read_all()
+        responses = request.user.notifications.read_all()
+        status = Response.HTTP_200_OK
         msg = _("Marked all notifications as read")
     elif action == 'unread':
-        request.user.notifications.unread_all()
+        responses = request.user.notifications.unread_all()
+        status = Response.HTTP_200_OK
         msg = _("Marked all notifications as unread")
     else:
         msg = _("Invalid mark action")
         success = False
+        status = Response.HTTP_400_BAD_REQUEST
+        responses = []
 
-    ctx = {'msg': msg, 'success': success, 'action': action}
+    ctx = {'msg': msg, 'success': success, 'action': action, 'status': status, 'responses': responses}
 
     return notification_redirect(request, ctx)
 
@@ -203,26 +214,33 @@ def delete(request):
     """
     notification_id = request.POST.get('id', None)
     success = True
+    read = 0
 
     if notification_id:
         try:
             notification = Notification.objects.get(pk=notification_id,
                                                     recipient=request.user)
             soft_delete = getattr(settings, 'NOTIFY_SOFT_DELETE', True)
+            if notification.read == False:
+                read = 1
             if soft_delete:
                 notification.deleted = True
                 notification.save()
+                status = Response.HTTP_200_OK
             else:
                 notification.delete()
+                status = Response.HTTP_200_OK
             msg = _("Deleted notification successfully")
         except Notification.DoesNotExist:
             success = False
             msg = _("Notification does not exists.")
+            status = Response.HTTP_400_BAD_REQUEST
     else:
         success = False
         msg = _("Invalid Notification ID")
+        status = Response.HTTP_400_BAD_REQUEST
 
-    ctx = {'msg': msg, 'success': success, }
+    ctx = {'msg': msg, 'success': success, 'status': status, 'read': read}
 
     return notification_redirect(request, ctx)
 
@@ -313,14 +331,16 @@ def notification_update(request):
             "notifications": notification_list,
             "success": True,
             "msg": msg,
+            "status": Response.HTTP_200_OK,
         }
 
         return JsonResponse(ctx)
 
     else:
         msg = _("Notification flag not sent.")
+        status = Response.HTTP_400_BAD_REQUEST
 
-    ctx = {"success": False, "msg": msg}
+    ctx = {"success": False, "msg": msg, 'status': status}
     return JsonResponse(ctx)
 
 

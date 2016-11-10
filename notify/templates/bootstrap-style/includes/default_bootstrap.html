@@ -1,0 +1,21 @@
+<tr>
+<td data-nf-id="{{ notification.id }}"
+class="notification list-group-item {{ notification.read|yesno:'read,unread' }}"
+style="{{ notification.read|yesno:'color: #e0e0e0;,' }}">
+    <a href="{{ notification.actor_url }}">{{ notification.actor }}</a> {{ notification.verb }}
+    <span class="timesince">{{ notification.created|timesince }} ago</span>
+</td>
+<td>
+    <button data-id="{{ notification.id }}" class="mark-notification"
+        data-mark-action="read"
+        data-toggle-text="<i class='fa fa-check'></i>"
+        style="background: transparent; border: none; {{ notification.read|yesno:'color: #e0e0e0;,' }}">
+
+        <i class="fa fa-check"></i>
+
+    </button>
+</td>
+<td>
+    <button class="delete-notification" data-id="{{ notification.id }}" style="background: transparent; border: none;"><span class="fa fa-trash"></span></button>
+</td>
+</tr>

@@ -1,0 +1,48 @@
+<div class="col-xs-12">
+
+  <ul class="nav nav-tabs" id="notification-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#all" aria-controls="all" role="tab" data-toggle="tab">All Notifications</a></li>
+    <li role="presentation"><a href="#unread" aria-controls="unread" role="tab" data-toggle="tab">Unread Notifications</a></li>
+  </ul>
+
+  <div class="tab-content" id="notification-tab-content">
+
+    <div class="tab-pane fade active in" role="tabpanel" aria-labelledby="all-tab" id="all">
+      <h1>All Notifications
+      <button class="btn btn-default pull-right mark-all-notifications" data-mark-action="unread" style="margin-left: 1em">Mark all as unread</button>
+      <button class="btn btn-default pull-right mark-all-notifications" data-mark-action="read">Mark all as read</button>
+      </h1>
+
+      <table class="table read-notifications list-group">
+        <tr>
+          <th>Notification</th>
+          <th>Mark as Read</th>
+          <th>Delete</th>
+        </tr>
+      {% if notifications %}
+      {% render_notifications using notifications %}
+      {% endif %}
+      </table>
+    </div>
+
+    <div class="tab-pane fade" role="tabpanel" aria-labelledby="unread-tab" id="unread">
+      <h1>Unread Notifications
+      <button class="btn btn-default pull-right mark-all-notifications" data-mark-action="unread" style="margin-left: 1em">Mark all as unread</button>
+      <button class="btn btn-default pull-right mark-all-notifications" data-mark-action="read">Mark all as read</button>
+      </h1>
+
+      <table class="table read-notifications list-group">
+        <tr>
+          <th>Notification</th>
+          <th>Mark as Read</th>
+          <th>Delete</th>
+        </tr>
+      {% if unread_notifications %}
+      {% render_notifications using unread_notifications %}
+      {% endif %}
+      </table>
+    </div>
+
+  </div>
+
+</div>

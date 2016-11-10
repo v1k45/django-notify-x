@@ -23,8 +23,6 @@ var nfListSelector = nfBoxListClassSelector + ", " + nfListClassSelector;
 var nfSelector = nfClassSelector + ", " + nfBoxClassSelector;
 
 var markNotificationSelector;
-var markReadNotificationSelector;
-var markUnreadNotificationSelector;
 var markAllNotificationSelector;
 var deleteNotificationSelector;
 
@@ -117,7 +115,7 @@ $(document).ready(function () {
 
 // Mark a notification as read using AJAX.
 $(document).ready(function () {
-    $(nfReadOnlyListClassSelector).delegate(markReadNotificationSelector, 'click', function () {
+    $(nfReadOnlyListClassSelector).delegate(markNotificationSelector, 'click', function () {
 
         var $notification = $(this);
         var mark_post_data = {
@@ -140,7 +138,7 @@ $(document).ready(function () {
 
 // Mark a notification as unread using AJAX.
 $(document).ready(function () {
-    $(nfUnreadOnlyListClassSelector).delegate(markUnreadNotificationSelector, 'click', function () {
+    $(nfUnreadOnlyListClassSelector).delegate(markNotificationSelector, 'click', function () {
 
         var $notification = $(this);
         var mark_post_data = {
@@ -186,9 +184,7 @@ $(document).ready(function () {
 // Delete a notification using AJAX.
 $(document).ready(function () {
 
-    //$(deleteNotificationSelector).on('click', function () {
-    $(nfListSelector).delegate(deleteNotificationSelector, 'click', function () {
-
+    var deleteAjax = function () {
         var $notification = $(this);
 
         var delete_notification_data = {
@@ -205,7 +201,11 @@ $(document).ready(function () {
                 deleteSuccess(response, $notification);
             }
         });
-    });
+    };
+    //$(deleteNotificationSelector).on('click', function () {
+    $(nfListSelector).delegate(deleteNotificationSelector, 'click', deleteAjax);
+    $(nfReadOnlyListClassSelector).delegate(deleteNotificationSelector, 'click', deleteAjax);
+    $(nfUnreadOnlyListClassSelector).delegate(deleteNotificationSelector, 'click', deleteAjax);
 });
 
 // Update a notification using AJAX.

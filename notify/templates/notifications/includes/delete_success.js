@@ -1,7 +1,13 @@
 var deleteSuccess = function (response, notification) {
     //console.log(response);
-    var $selected_notification = notification.closest(nfClassSelector);
-    $selected_notification.fadeOut(300, function () {
-        $(this).remove()
-    });
+    var $selected_notification = $('[data-nf-id='+notification.attr('data-id')+']');
+
+    if (response.status === 200) {
+      $('.notification-badge').each(function() {
+        notificationCount = parseInt($(this).text()) - response.read;
+        $(this).text(notificationCount);
+      });
+    }
+
+    $selected_notification.parent().remove()
 };
