@@ -128,6 +128,21 @@ delete-notification & data-id
 .. note::
     The above settings are only necessary if you want things happen over AJAX. If you want to control things with POST request, there is absolutely no need of keeping these attributes.
 
+Switching to bootstrap github-style notifications
+-------------------------------------------------
+
+As long as bootstrap v3 stylesheets and javascript are included in your project you can switch to using a github-style notification system using the included ``bootstrap-style`` folder. Simply ``cp -R /path/to/notify/templates/bootstrap-style/ /path/to/project/templates/notifications`` and it will override the default templates. Include the following javascript snippet on the page to activate the bootstrap nav tabs.
+
+snippet::
+  {% load staticfiles %}
+  <script src="{% static 'notify/notifyX.min.js' %}"></script>
+  <script type="text/javascript">
+    $('#notification-tabs a').click(function (e) {
+      e.preventDefault()
+      $(this).tab('show')
+    })
+  </script>
+
 
 Notification Template tags
 ==========================

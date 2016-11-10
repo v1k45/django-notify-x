@@ -1,6 +1,11 @@
 Changelog
 =========
 
+- Version 0.1.8
+    - Lots of bug fixes for v0.1.7's new functionality
+    - ``status`` dictionary key representing the HTTP Status Response Code is now passed to the ``JsonResponse`` function and returned
+    - Added bootstrap v3 github-style notifications templates that can override the default notification templates
+
 - Version 0.1.7
     - Support for ``mark_read`` and ``mark_unread`` added to allow for github-style notifications
     - ``mark_as_read`` and ``mark_as_unread`` now check state and return an HTTP 204 Response if no change is required and HTTP 200 Response otherwise
