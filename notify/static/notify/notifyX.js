@@ -25,6 +25,7 @@ var nfSelector = nfClassSelector + ", " + nfBoxClassSelector;
 var markNotificationSelector;
 var markAllNotificationSelector;
 var deleteNotificationSelector;
+var markLinkNotificationSelector;
 
 // Class details
 var readNotificationClass;

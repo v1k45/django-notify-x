@@ -18,4 +18,5 @@ var markReadSuccess = function (response, notification) {
 
     $('[data-nf-id='+notification.attr('data-id')+']').css({'color': '#e0e0e0'});
     $(markNotificationSelector+'[data-id='+notification.attr('data-id')+']').css({'color': '#e0e0e0'});
+    $(markLinkNotificationSelector+'[data-id='+notification.attr('data-id')+']').css({'opacity': '0.6'});
 };

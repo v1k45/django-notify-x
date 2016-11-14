@@ -6,11 +6,13 @@ var markAllSuccess = function (response) {
         var rmClass = unreadNotificationClass;
         $(nfSelector).css({'color': '#e0e0e0'});
         $(markNotificationSelector).css({'color': '#e0e0e0'});
+        $(markLinkNotificationSelector).css({'opacity': '0.6'});
     } else {
         mkClass = unreadNotificationClass;
         rmClass = readNotificationClass;
         $(nfSelector).css({'color': '#000'});
         $(markNotificationSelector).css({'color': '#000'});
+        $(markLinkNotificationSelector).css({'opacity': '1'});
     }
     // console.log(mkClass);
     // console.log(rmClass);

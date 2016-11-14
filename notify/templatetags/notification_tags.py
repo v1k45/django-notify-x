@@ -113,6 +113,7 @@ def include_notify_js_variables(context):
         'nf_mark_selector': notify_settings.MARK_NF_CLASS_SELECTOR,
         'nf_mark_all_selector': notify_settings.MARK_ALL_NF_CLASS_SELECTOR,
         'nf_delete_selector': notify_settings.DELETE_NF_CLASS_SELECTOR,
+        'nf_mark_link_selector': notify_settings.MARK_NF_LINK_CLASS_SELECTOR,
 
         'nf_read_class': notify_settings.READ_NF_CLASS,
         'nf_unread_class': notify_settings.UNREAD_NF_CLASS,

@@ -27,6 +27,9 @@ SINGLE_NF_BOX_CLASS_SELECTOR = getattr(settings,
 MARK_NF_CLASS_SELECTOR = getattr(settings, 'NOTIFY_MARK_NF_CLASS_SELECTOR',
                                  '.mark-notification')
 
+# Class-selector for link element to change opacity on `mark` as read/unread action.
+MARK_NF_LINK_CLASS_SELECTOR = getattr(settings, 'NOTIFY_NF_LINK_CLASS_SELECTOR', '.mark-link-notification')
+
 # Class-selector for element performing `mark_all` as read/unread action.
 MARK_ALL_NF_CLASS_SELECTOR = getattr(settings,
                                      'NOTIFY_MARK_ALL_NF_CLASS_SELECTOR',
