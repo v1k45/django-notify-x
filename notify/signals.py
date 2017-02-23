@@ -50,8 +50,8 @@ def notifier(sender, **kwargs):
     if not verb:
         raise TypeError(_("Verb not specified."))
 
-    if recipient_list and not isinstance(recipient_list, list):
-        raise TypeError(_("Supplied recipient is not an instance of list."))
+    if recipient_list and not isinstance(recipient_list, list) and not isinstance(recipient_list, set):
+        raise TypeError(_("Supplied recipient is not an instance of list or set."))
 
     if recipient:
         notification = Notification(

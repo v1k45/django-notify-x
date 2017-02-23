@@ -7,7 +7,7 @@ This page will describe how to use ``django-notify-x``.
 Component details
 =================
 
-Just like ``django-notifications``, this app also follows the approach described by `ActivityStrea.ms`_ . Notifications are generated when an action is performed on concerning a recipient. 
+Just like ``django-notifications``, this app also follows the approach described by `ActivityStrea.ms`_ . Notifications are generated when an action is performed on concerning a recipient.
 
 The following are the main components:
 
@@ -86,4 +86,4 @@ Sending notifications to to multiple users:
 Just change the ``recipient`` to ``recipient_list`` and send notifications to as many users you want!
 
 .. warning::
-     ``recipient_list`` expects supplied object to be a list() instance, make sure you convert your ``QuerySet`` to list() before assigning vaule.
+     ``recipient_list`` expects supplied object to be a ``list()`` or ``set()`` instance, make sure you convert your ``QuerySet`` to ``set()`` or ``list()`` before assigning value. ``set()`` is preferred because it eliminates duplicate values and membership checks are faster.

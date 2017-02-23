@@ -1,6 +1,9 @@
 Changelog
 =========
 
+- Version 0.1.10
+    - Support for ``set`` objects added when passing a ``recipient_list`` to ``notify.send()``
+
 - Version 0.1.8
     - Lots of bug fixes for v0.1.7's new functionality
     - ``status`` dictionary key representing the HTTP Status Response Code is now passed to the ``JsonResponse`` function and returned

@@ -64,7 +64,7 @@ The shortcut properties for activity components:
 
     - Not a property, but a model method...
 
-        ``.as_json()``, converts the values of the model instance to JSON or python dictonary, it is used when sending live notification updates as JSON format.    
+        ``.as_json()``, converts the values of the model instance to JSON or python dictonary, it is used when sending live notification updates as JSON format.
 
 
 Other fields:
@@ -103,7 +103,8 @@ The actor, target and obj components
 The recipient and recipient_list
 --------------------------------
 
-    The ``notify`` signal takes these two as conditionally optional keyword arguments. They can neither be supplied together nor be empty. The ``recipient`` takes a user model instance only, the same case is with the ``recipient_list`` which takes a ``list()`` of user model instances.
+    The ``notify`` signal takes these two as conditionally optional keyword arguments. They can neither be supplied together nor be empty. The ``recipient`` takes a user model instance only, the same case is with the ``recipient_list`` which takes a ``list()`` or ``set()`` of user model instances. A ``set()`` is preferred
+    because it will only contain unique elements and eliminate duplicate notification checks and membership checks on a set are faster.
 
     They're accessible from single signal because it would be highly redundant to create a separate signal with almost identical parameters just for the sake of making things distinguishable.
 
