@@ -7,7 +7,7 @@ class NotificationAdmin(admin.ModelAdmin):
     list_display = ('recipient', 'actor', 'verb',
                     'obj', 'target', 'read', 'deleted')
     list_filter = ('read', 'deleted', 'nf_type', 'created')
-    search_fields = ('recipient__username', 'verb', 'description')
+    search_fields = ('verb', 'description', 'actor_text', 'target_text')
     raw_id_fields = ('recipient', )
 
     fieldsets = (
