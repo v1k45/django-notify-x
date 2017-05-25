@@ -230,7 +230,7 @@ class Notification(models.Model):
                                              'actor_object_id')
 
     actor_text = models.CharField(
-        max_length=50, blank=True, null=True,
+        max_length=100, blank=True, null=True,
         verbose_name=_('Anonymous text for actor'))
 
     actor_url_text = models.CharField(
@@ -238,14 +238,14 @@ class Notification(models.Model):
         verbose_name=_('Anonymous URL for actor'))
 
     # basic details.
-    verb = models.CharField(max_length=50,
+    verb = models.CharField(max_length=100,
                             verbose_name=_('Verb of the action'))
 
     description = models.CharField(
         max_length=255, blank=True, null=True,
         verbose_name=_('Description of the notification'))
 
-    nf_type = models.CharField(max_length=20, default='default',
+    nf_type = models.CharField(max_length=40, default='default',
                                verbose_name=_('Type of notification'))
 
     # TODO: Add a field to store notification cover images.
@@ -264,7 +264,7 @@ class Notification(models.Model):
                                               'target_object_id')
 
     target_text = models.CharField(
-        max_length=50, blank=True, null=True,
+        max_length=100, blank=True, null=True,
         verbose_name=_('Anonymous text for target'))
 
     target_url_text = models.CharField(
@@ -284,7 +284,7 @@ class Notification(models.Model):
     obj_content_object = GenericForeignKey('obj_content_type', 'obj_object_id')
 
     obj_text = models.CharField(
-        max_length=50, blank=True, null=True,
+        max_length=100, blank=True, null=True,
         verbose_name=_('Anonymous text for action object'))
 
     obj_url_text = models.CharField(
