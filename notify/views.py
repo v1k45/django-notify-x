@@ -6,11 +6,28 @@ from django.http import JsonResponse, HttpResponseBadRequest, \
 from django.shortcuts import render
 from django.utils.http import is_safe_url
 from django.utils.translation import ugettext as _
+from django.views.generic import View
 from django.views.decorators.http import require_POST
 from .models import Notification, Response
 from .utils import render_notification
 
 # TODO: Convert function-based views to Class-based views.
+
+class NotificationsList(View):
+
+    def get_queryset(self, filter_=None):
+        queryset = Notifications.objects.active().filter(recipient=request.user)
+        if filter_ == 'read':
+            queryset = queryset.read()
+        elif filter_ == 'unread':
+            queryset = queryset.unread()
+        return queryset
+
+    def get(self, request):
+        filter_ = self.request.GET.get('filter')
+        queryset = self.get_queryset(filter_)
+        notifications = [item.as_json() for item in queryset]
+        return JsonResponse(notifications, status=200)
 
 
 def notification_redirect(request, ctx):

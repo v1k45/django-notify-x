@@ -3,6 +3,7 @@ from notify import views as nf
 
 urlpatterns = [
     url(r'^all/$', nf.notifications, name="all"),
+    url(r'^api/all/$', nf.NotificationsList, name="api_list"),
     url(r'^api/update/$', nf.notification_update, name="update"),
     url(r'^mark/$', nf.mark, name='mark'),
     url(r'^mark-read/$', nf.mark_read, name='mark_read'),
