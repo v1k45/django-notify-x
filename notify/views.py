@@ -16,7 +16,7 @@ from .utils import render_notification
 class NotificationsList(View):
 
     def get_queryset(self, filter_=None):
-        queryset = Notifications.objects.active().filter(recipient=request.user)
+        queryset = Notification.objects.active().filter(recipient=request.user)
         if filter_ == 'read':
             queryset = queryset.read()
         elif filter_ == 'unread':
@@ -24,7 +24,7 @@ class NotificationsList(View):
         return queryset
 
     def get(self, request):
-        filter_ = self.request.GET.get('filter')
+        filter_ = request.GET.get('filter')
         queryset = self.get_queryset(filter_)
         notifications = [item.as_json() for item in queryset]
         return JsonResponse(notifications, status=200)
