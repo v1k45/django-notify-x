@@ -362,14 +362,14 @@ class Notification(models.Model):
         Uses ``get_absolute_url()``.
 
         If ``get_absolute_url()`` method fails, it tries to grab URL
-        from ``actor_url_text``, if it fails again, returns a "#".
+        from ``actor_url_text``, if it fails again, returns None (null).
 
         :return: URL for the actor.
         """
         try:
             url = self.actor_content_object.get_absolute_url()
         except AttributeError:
-            url = self.actor_url_text or "#"
+            url = self.actor_url_text or None
         return url
 
     @cached_property
@@ -391,7 +391,7 @@ class Notification(models.Model):
         try:
             url = self.target_content_object.get_absolute_url()
         except AttributeError:
-            url = self.target_url_text or "#"
+            url = self.target_url_text or None
         return url
 
     @cached_property
@@ -413,7 +413,7 @@ class Notification(models.Model):
         try:
             url = self.obj_content_object.get_absolute_url()
         except AttributeError:
-            url = self.obj_url_text or "#"
+            url = self.obj_url_text or None
         return url
 
     @staticmethod
