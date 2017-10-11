@@ -15,7 +15,7 @@ notify = dispatch.Signal(providing_args=[
 
 
 def truncate(string, length):
-    return string[:length] if len(string) > length else string
+    return string[:length] if string is not None and len(string) > length else string
 
 
 @receiver(notify, dispatch_uid='notify_user')
