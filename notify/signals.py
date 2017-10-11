@@ -14,6 +14,10 @@ notify = dispatch.Signal(providing_args=[
 ])
 
 
+def truncate(string, length):
+    return string[:length] if len(string) > length else string
+
+
 @receiver(notify, dispatch_uid='notify_user')
 def notifier(sender, **kwargs):
     recipient = kwargs.pop('recipient', None)
@@ -37,6 +41,15 @@ def notifier(sender, **kwargs):
     obj_url = kwargs.pop('obj_url', None)
 
     extra = kwargs.pop('extra', None)
+
+    actor_text = truncate(actor_text, Notification._meta.get_field('actor_text').max_length)
+    actor_url = truncate(actor_text, Notification._meta.get_field('actor_url').max_length)
+
+    target_text = truncate(target_text, Notification._meta.get_field('target_text').max_length)
+    target_url = truncate(target_text, Notification._meta.get_field('target_url').max_length)
+
+    obj_text = truncate(obj_text, Notification._meta.get_field('obj_text').max_length)
+    obj_url = truncate(obj_text, Notification._meta.get_field('obj_url').max_length)
 
     if recipient and recipient_list:
         raise TypeError(_("You must specify either a single recipient or a list"
