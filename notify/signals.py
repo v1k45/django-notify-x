@@ -2,6 +2,7 @@ from django import dispatch
 from django.dispatch import receiver
 from notify.models import Notification
 from django.utils.translation import ugettext as _
+import six
 
 
 notify = dispatch.Signal(providing_args=[
@@ -15,7 +16,7 @@ notify = dispatch.Signal(providing_args=[
 
 
 def truncate(string, length):
-    if string is not None and isinstance(string, str):
+    if string is not None and isinstance(string, six.string_types):
         if len(string) > length:
             return string[:length]
         return string
