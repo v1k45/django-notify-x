@@ -47,13 +47,13 @@ def notifier(sender, **kwargs):
     extra = kwargs.pop('extra', None)
 
     actor_text = truncate(actor_text, Notification._meta.get_field('actor_text').max_length)
-    actor_url = truncate(actor_text, Notification._meta.get_field('actor_url_text').max_length)
+    actor_url = truncate(actor_url, Notification._meta.get_field('actor_url_text').max_length)
 
     target_text = truncate(target_text, Notification._meta.get_field('target_text').max_length)
-    target_url = truncate(target_text, Notification._meta.get_field('target_url_text').max_length)
+    target_url = truncate(target_url, Notification._meta.get_field('target_url_text').max_length)
 
     obj_text = truncate(obj_text, Notification._meta.get_field('obj_text').max_length)
-    obj_url = truncate(obj_text, Notification._meta.get_field('obj_url_text').max_length)
+    obj_url = truncate(obj_url, Notification._meta.get_field('obj_url_text').max_length)
 
     if recipient and recipient_list:
         raise TypeError(_("You must specify either a single recipient or a list"
