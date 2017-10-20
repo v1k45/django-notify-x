@@ -19,7 +19,8 @@ def truncate(string, length):
     if string is not None and isinstance(string, six.string_types):
         if len(string) > length:
             return string[:length]
-        return string
+    return string
+
 
 
 @receiver(notify, dispatch_uid='notify_user')
