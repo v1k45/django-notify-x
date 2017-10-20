@@ -5,7 +5,6 @@ from django.conf import settings
 from django.db.models import QuerySet
 from jsonfield.fields import JSONField
 from django.utils.encoding import python_2_unicode_compatible
-from django.utils.html import escape
 from django.utils.timesince import timesince
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import force_text
@@ -417,17 +416,17 @@ class Notification(models.Model):
         return url
 
     @staticmethod
-    def do_escape(obj):
+    def do_convert(obj):
         """
-        Method to HTML escape an object or set it to None conditionally.
+        Method to get string version of an object or set it to None conditionally.
         performs ``force_text()`` on the argument so that a foreignkey gets
         serialized? and spit out the ``__str__`` output instead of an Object.
 
-        :param obj: Object to escape.
+        :param obj: Object to convert.
 
-        :return: HTML escaped and JSON-friendly data.
+        :return: JSON-friendly data.
         """
-        return escape(force_text(obj)) if obj else None
+        return force_text(obj) if obj else None
 
     def as_json(self):
         """
@@ -439,16 +438,16 @@ class Notification(models.Model):
         """
         data = {
             "id": self.id,
-            "actor": self.do_escape(self.actor),
-            "actor_url": self.do_escape(self.actor_url),
-            "verb": self.do_escape(self.verb),
-            "description": self.do_escape(self.description),
+            "actor": self.do_convert(self.actor),
+            "actor_url": self.do_convert(self.actor_url),
+            "verb": self.do_convert(self.verb),
+            "description": self.do_convert(self.description),
             "read": self.read,
-            "nf_type": self.do_escape(self.nf_type),
-            "target": self.do_escape(self.target),
-            "target_url": self.do_escape(self.target_url),
-            "obj": self.do_escape(self.obj),
-            "obj_url": self.do_escape(self.obj_url),
+            "nf_type": self.do_convert(self.nf_type),
+            "target": self.do_convert(self.target),
+            "target_url": self.do_convert(self.target_url),
+            "obj": self.do_convert(self.obj),
+            "obj_url": self.do_convert(self.obj_url),
             "created": self.created,
             "data": self.extra,
         }
