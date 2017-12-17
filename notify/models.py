@@ -78,7 +78,7 @@ class NotificationQueryset(QuerySet):
         """
         qs = self.read()
         if user:
-            qs.filter(recipient=user)
+            qs = qs.filter(recipient=user)
         qs.update(read=False)
 
     def read_all(self, user=None):
@@ -91,7 +91,7 @@ class NotificationQueryset(QuerySet):
         """
         qs = self.unread()
         if user:
-            qs.filter(recipient=user)
+            qs = qs.filter(recipient=user)
         qs.update(read=True)
 
     def delete_all(self, user=None):
@@ -104,7 +104,7 @@ class NotificationQueryset(QuerySet):
         """
         qs = self.active()
         if user:
-            qs.filter(recipient=user)
+            qs = qs.filter(recipient=user)
 
         soft_delete = getattr(settings, 'NOTIFY_SOFT_DELETE', True)
 
@@ -123,7 +123,7 @@ class NotificationQueryset(QuerySet):
         """
         qs = self.deleted()
         if user:
-            qs.filter(recipient=user)
+            qs = qs.filter(recipient=user)
         qs.update(deleted=False)
 
     def deleted(self):

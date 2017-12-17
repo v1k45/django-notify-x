@@ -1,6 +1,10 @@
 Changelog
 =========
 
+- Version 0.1.8
+    - Fix #17 where queryset filter was not being applied before updating
+    - Limit django verison dependency
+
 - Version 0.1.6
     - ``prefetch_relations`` can now be used as a queryset method.
     - More clear target precedence.
@@ -8,7 +12,7 @@ Changelog
 
 - Version 0.1.5
     - Custom rendering targets for notifications
-    - ``raw_id_fields`` on admin for large user count 
+    - ``raw_id_fields`` on admin for large user count
     - Replaced ``UrlField`` with ``CharField``
     - Started using ``cached_property`` for better performace.
     - Minor bug fixes and improvements.
