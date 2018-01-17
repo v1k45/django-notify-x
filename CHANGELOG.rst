@@ -1,5 +1,7 @@
 Changelog
 =========
+- Version 0.1.9
+    - Django 2.0 version (does not support older versions)
 
 - Version 0.1.8
     - Fix #17 where queryset filter was not being applied before updating

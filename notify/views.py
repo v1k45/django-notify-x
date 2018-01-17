@@ -1,9 +1,9 @@
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse
 from django.http import JsonResponse, HttpResponseBadRequest, \
                         HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse
 from django.utils.http import is_safe_url
 from django.utils.translation import ugettext as _
 from django.views.decorators.http import require_POST

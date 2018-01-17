@@ -1,5 +1,6 @@
-from django.conf.urls import url, include
+from django.urls import path, include
+from .. import urls
 
-urlpatterns = [
-    url(r'^', include('notify.urls', namespace='notifications')),
-]
+urlpatterns = ([
+    path('', include(urls, namespace='notifications'))
+])

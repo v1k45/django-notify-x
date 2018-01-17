@@ -1,12 +1,14 @@
 from django.conf.urls import url
-from notify import views as nf
+from django.urls import path
+from .views import *
 
+app_name = 'notifications'
 urlpatterns = [
-    url(r'^all/$', nf.notifications, name="all"),
-    url(r'^api/update/$', nf.notification_update, name="update"),
-    url(r'^mark/$', nf.mark, name='mark'),
-    url(r'^mark-all/$', nf.mark_all, name='mark_all'),
-    url(r'^delete/$', nf.delete, name='delete'),
-    url(r'^rdr/(?P<notification_id>[\d]+)/$', nf.read_and_redirect,
+    path('all/', notifications, name="all"),
+    path('api/update/', notification_update, name="update"),
+    path('mark/', mark, name='mark'),
+    path('mark-all/', mark_all, name='mark_all'),
+    path('delete/', delete, name='delete'),
+    url(r'^rdr/(?P<notification_id>[\d]+)/$', read_and_redirect,
         name='read_and_redirect'),
 ]
