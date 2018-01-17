@@ -1,5 +1,12 @@
-from django.conf.urls import url
+try:
+    from django.conf.urls import url
+except ImportError:
+    from django.urls import url
+
 from notify import views as nf
+
+app_name = 'notifications'
+
 
 urlpatterns = [
     url(r'^all/$', nf.notifications, name="all"),
