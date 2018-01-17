@@ -1,6 +1,10 @@
 Changelog
 =========
 
+- Version 0.1.9
+    - Support Django 2.0
+    - Updated on 18th Jan 2018
+
 - Version 0.1.8
     - Fix #17 where queryset filter was not being applied before updating
     - Limit django verison dependency
