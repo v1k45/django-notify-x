@@ -1,5 +1,5 @@
 from django import template
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils.translation import ugettext as _
 from .. import notify_settings
 from ..utils import render_notification
@@ -145,7 +145,7 @@ class UserNotification(RenderNotificationsNode):
         if self.obj == 'user-notification':
             request = context['request']
             user = request.user
-            if user.is_authenticated():
+            if user.is_authenticated:
                 notifications = user.notifications.active().prefetch()
                 return self.generate_html(notifications)
         return ''

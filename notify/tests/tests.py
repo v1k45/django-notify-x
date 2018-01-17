@@ -1,13 +1,17 @@
-from django.test import TestCase, override_settings
-from django.contrib.auth import get_user_model
-from notify.models import Notification
-from notify.signals import notify
-from django.utils import timezone
-from django.core.urlresolvers import reverse
 import json
-from django.template import Template, Context, RequestContext
-from django.test.client import RequestFactory
+
+
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
+from django.template import Template, Context, RequestContext
+from django.test import TestCase, override_settings
+from django.test.client import RequestFactory
+from django.urls import reverse
+from django.utils import timezone
+
+from ..models import Notification
+from ..signals import notify
+
 
 User = get_user_model()
 
@@ -251,7 +255,7 @@ class NotificationViewTest(TestCase):
         # Marking as read
         ctx = {'action': 'read', 'id': first_nf_id, 'next': '/notifications/'}
         response = self.client.post(reverse('notifications:mark'), ctx)
-        self.assertRedirects(response, 'http://testserver/notifications/',
+        self.assertRedirects(response, '/notifications/',
                              target_status_code=404, status_code=302)
 
         nf = Notification.objects.get(pk=first_nf_id)
@@ -264,7 +268,7 @@ class NotificationViewTest(TestCase):
         ctx2 = {'action': 'unread', 'id': first_nf_id,
                 'next': '/notifications/'}
         response_2 = self.client.post(reverse('notifications:mark'), ctx2)
-        self.assertRedirects(response_2, 'http://testserver/notifications/',
+        self.assertRedirects(response_2, '/notifications/',
                              target_status_code=404, status_code=302)
         nf_2 = Notification.objects.get(pk=first_nf_id)
         self.assertFalse(nf_2.read)
@@ -517,7 +521,7 @@ class NotificationViewTest(TestCase):
         url = "{}?next=/home/".format(target_page)
         response = self.client.get(url)
 
-        self.assertRedirects(response, "http://testserver/home/",
+        self.assertRedirects(response, "/home/",
                              target_status_code=404, status_code=302)
         nf_new = Notification.objects.get(pk=1)
         self.assertTrue(nf_new.read)
@@ -557,7 +561,7 @@ class NotificationViewTest(TestCase):
         url = "{}?next=/home/".format(target_page)
         response = self.client.get(url)
 
-        self.assertRedirects(response, "http://testserver/home/",
+        self.assertRedirects(response, "/home/",
                              target_status_code=404, status_code=302)
 
         nf_new = Notification.objects.get(pk=3)

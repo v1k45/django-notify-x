@@ -35,8 +35,7 @@ setup(
 
     classifiers=[
         'Development Status :: 5 - Production/Stable',
-        'Framework :: Django :: 1.8',
-        'Framework :: Django :: 1.9',
+        'Framework :: Django :: 2.0',
         'Environment :: Web Environment',
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 2.7',
