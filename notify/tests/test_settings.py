@@ -25,7 +25,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
 )
-MIDDLEWARE = MIDDLEWARE_CLASSES
+
+# MIDDLEWARE = MIDDLEWARE_CLASSES
 
 AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend',)
 
@@ -52,3 +53,6 @@ STATICFILES_DIRS = (os.path.join(STATIC_ROOT, 'sitefiles'),)
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+# SECURITY WARNING: don't run with DEBUG turned on in production!
+DEBUG = True
