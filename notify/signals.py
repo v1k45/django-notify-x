@@ -50,6 +50,10 @@ def notifier(sender, **kwargs):
     if not verb:
         raise TypeError(_("Verb not specified."))
 
+    if verb:
+        if len(verb) > Notification._meta.get_field('verb').max_length:
+            raise ValueError(_("Verb is too long."))
+
     if recipient_list and not isinstance(recipient_list, list):
         raise TypeError(_("Supplied recipient is not an instance of list."))
 

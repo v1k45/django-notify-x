@@ -215,7 +215,7 @@ class Notification(models.Model):
         verbose_name=_('Anonymous URL for actor'))
 
     # basic details.
-    verb = models.CharField(max_length=50,
+    verb = models.CharField(max_length=100,
                             verbose_name=_('Verb of the action'))
 
     description = models.CharField(
