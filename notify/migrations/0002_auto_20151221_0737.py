@@ -4,8 +4,8 @@ from __future__ import unicode_literals
 
 from django.conf import settings
 from django.db import migrations, models
+from django.contrib.postgres import fields
 import django.db.models.deletion
-import jsonfield.fields
 
 
 class Migration(migrations.Migration):
@@ -48,7 +48,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='notification',
             name='extra',
-            field=jsonfield.fields.JSONField(blank=True, null=True, verbose_name='JSONField to store addtional data'),
+            field=fields.JSONField(blank=True, null=True, verbose_name='JSONField to store addtional data'),
         ),
         migrations.AlterField(
             model_name='notification',

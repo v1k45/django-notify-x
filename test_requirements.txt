@@ -1,3 +1,2 @@
-django-jsonfield
 six
 bumpversion

@@ -42,4 +42,4 @@ Dependencies
 ``django-notify-x`` currently supports Django 1.8 and above. There is no support for previous versions.
 Both, Python 2.7 as well as Python 3.4 are supported.
 
-It uses ``django-jsonfield`` package to add support to attach JSON data to notifications using the ``extra`` field.
+It uses ``django.contrib.postgres.fields.JSONField`` package to add support to attach JSON data to notifications using the ``extra`` field. Only Postgres is supported.

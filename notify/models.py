@@ -1,9 +1,9 @@
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.postgres import fields
 from django.db import models
 from django.conf import settings
 from django.db.models import QuerySet
-from jsonfield.fields import JSONField
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.timesince import timesince
 from django.utils.translation import ugettext_lazy as _
@@ -290,8 +290,8 @@ class Notification(models.Model):
         blank=True, null=True, max_length=200,
         verbose_name=_('Anonymous URL for action object'))
 
-    extra = JSONField(null=True, blank=True,
-                      verbose_name=_('JSONField to store addtional data'))
+    extra = fields.jsonb.JSONField(null=True, blank=True,
+                                   verbose_name=_('JSONField to store addtional data'))
 
     # Advanced details.
     created = models.DateTimeField(auto_now=False, auto_now_add=True)
