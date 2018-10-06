@@ -508,6 +508,16 @@ class NotificationViewTest(TestCase):
         # request is still successful
         self.assertTrue(resp2['success'])
 
+    def test_update_view_without_flag(self):
+        url = reverse('notifications:update')
+
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+        resp = json.loads(response.content.decode('utf-8'))
+
+        self.assertFalse(resp['success'])
+
     def test_read_and_redirect(self):
         """
         when users visits the view, they are redirected
