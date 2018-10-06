@@ -229,7 +229,7 @@ def notification_update(request):
 
     :return: Notification updates (if any) in JSON format.
     """
-    flag = request.GET.get('flag', None)
+    flag = request.GET.get('flag', '')
     target = request.GET.get('target', 'box')
     last_notification = int(flag) if flag.isdigit() else None
 
