@@ -2,15 +2,10 @@ language: python
 
 python:
     - "2.7"
+    - "3.4"
 
 install:
-    pip install tox
-
-env:
-    - TOXENV = py27-django18
-    - TOXENV = py27-django19
-    - TOXENV = py3-django18
-    - TOXENV = py3-django19
+    pip install tox-travis
 
 script:
     tox
