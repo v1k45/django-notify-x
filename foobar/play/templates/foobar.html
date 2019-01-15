@@ -1,0 +1,11 @@
+<html>
+
+<body>
+<h1>test
+</h1>
+{% load notification_tags %}
+{% render_notifications using request.user.notifications.active %}
+{% load notification_tags %}
+{% include_notify_js_variables %}
+</body>
+</html>
