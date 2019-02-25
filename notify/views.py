@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.core.urlresolvers import reverse
 from django.http import JsonResponse, HttpResponseBadRequest, \
                         HttpResponseRedirect
@@ -8,25 +9,50 @@ from django.utils.http import is_safe_url
 from django.utils.translation import ugettext as _
 from django.views.generic import View
 from django.views.decorators.http import require_POST
+
 from .models import Notification, Response
+from .notify_settings import PAGE_SIZE
 from .utils import render_notification
 
 # TODO: Convert function-based views to Class-based views.
 
 class NotificationsList(View):
 
-    def get_queryset(self, filter_=None):
-        queryset = Notification.objects.active().filter(recipient=self.request.user)
+    def get_queryset(self, filter_=None, page=None):
+        queryset = Notification.objects.active().prefetch().filter(recipient=self.request.user)
+        paginator = Paginator(queryset, PAGE_SIZE)
+        try:
+            notifications = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, deliver first page.
+            notifications = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results.
+            notifications = paginator.page(paginator.num_pages)
         if filter_ == 'read':
-            queryset = queryset.read()
+            notifications = notifications.read()
         elif filter_ == 'unread':
-            queryset = queryset.unread()
-        return queryset
+            notifications = notifications.unread()
+        return [
+            notifications,
+            notifications.has_next(),
+            notifications.has_previous(),
+            paginator.num_pages
+        ]
 
     def get(self, request):
         filter_ = self.request.GET.get('filter')
-        queryset = self.get_queryset(filter_)
+        page = request.GET.get('page')
+        [queryset, has_next, has_prev, num_pages] = self.get_queryset(filter_, page)
         notifications = [item.as_json() for item in queryset]
+        notifications = {
+            'pageInfo': {
+                'hasNextPage': has_next,
+                'hasPrevPage': has_prev,
+                'numPages': num_pages,
+            },
+            'data': notifications,
+        }
         return JsonResponse(notifications, status=200, safe=False)
 
 

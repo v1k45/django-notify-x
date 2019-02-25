@@ -54,3 +54,6 @@ DELETE_NF_CLASS_SELECTOR = getattr(settings, 'NOTIFY_DELETE_NF_CLASS_SELECTOR',
 
 # Time interval between ajax calls for notification update.
 UPDATE_TIME_INTERVAL = getattr(settings, 'NOTIFY_UPDATE_TIME_INTERVAL', 5000)
+
+# Page size for pagination
+PAGE_SIZE = getattr(settings, 'NOTIFY_PAGE_SIZE', 20)
