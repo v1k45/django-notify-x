@@ -1,0 +1,17 @@
+{% load staticfiles %}<html>
+<head>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="{% static "notify/notifyX.js" %}"></script>
+</head>
+<body>
+
+<h1>test
+</h1>
+{% load notification_tags %}
+{% load notification_tags %}
+{% include_notify_js_variables %}
+<ul class="notification-box-list">
+{% render_notifications using request.user.notifications.active %}
+</ul>
+</body>
+</html>
