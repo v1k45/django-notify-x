@@ -86,7 +86,7 @@ Sending notifications to a single user:
         dofollow
         ...
 
-        notify.send(request.user, recipient=user, actor=request.user
+        notify.send(request.user, recipient=user, actor=request.user,
                     verb='followed you.', nf_type='followed_by_one_user')
 
         return YourResponse
