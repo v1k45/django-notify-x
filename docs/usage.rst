@@ -86,4 +86,4 @@ Sending notifications to to multiple users:
 Just change the ``recipient`` to ``recipient_list`` and send notifications to as many users you want!
 
 .. warning::
-     ``recipient_list`` expects supplied object to be a list() instance, make sure you convert your ``QuerySet`` to list() before assigning vaule.
+     ``recipient_list`` expects supplied object to be a list() instance, make sure you convert your ``QuerySet`` to list() before assigning value.
